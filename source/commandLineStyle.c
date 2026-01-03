@@ -94,10 +94,18 @@ int commandLineStyle(int argc, char* argv[])
 			err(2, "CommandLineStyle() : ERREUR\n");
 		}
 	}
+    //  déclarer la version
+    else if ( FLAGS[h] == 2 )
+    {
+        printf(
+                "Vigenere v1.5\n"
+                "Groupe E13 - CYBER 1\n"
+              );
+        return 0;
+    }
 	else
 	{
-		printf("DEBUG commandLineStyle() : cette option n'est pas encore possible\n"
-				"dans cette version.\n");
+		printf("DEBUG commandLineStyle() : cette option n'existe pas.\n");
 		return 1;
 	}
 
