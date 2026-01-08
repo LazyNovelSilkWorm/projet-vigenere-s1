@@ -1,3 +1,13 @@
+/*=============================================================================
+ *                           VARIABLES GLOBALES
+ *=============================================================================
+ *
+ * Voir l'explication dans "checkInputs.c"
+ */
+
+
+
+
 //	Variables utilisées pour accéder à FLAGS et PARAMS
 //	Ces variables sont nommées après l'option qu'elles représentent.
 int g = 0;	//	option -g et son paramètre
