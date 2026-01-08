@@ -1,5 +1,5 @@
 /*=============================================================================
- *                          MODE : LIGNE DE COMMANDE
+ *                        MODE : LIGNE DE COMMANDE - CLI
  *=============================================================================
  * 	Ce programme est appelé lorsque argc > 1, la version ligne de commande
  * 	du projet.
