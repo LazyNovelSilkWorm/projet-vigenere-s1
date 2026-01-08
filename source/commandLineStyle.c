@@ -1,9 +1,17 @@
-/*
+/*=============================================================================
+ *                          MODE : LIGNE DE COMMANDE
+ *=============================================================================
  * 	Ce programme est appelé lorsque argc > 1, la version ligne de commande
  * 	du projet.
  *
- * 	Autrement, la fonction menuStyle (voir menuStyle.c) est appelée.
+ *      Est appelé par la fonction main lorsque argc > 1, c'est à dire que
+ *  le programme est appelé telle une commande shell. Cela permet d'utiliser
+ *  Vigenere au sein d'un programme ou script plus important, et d'automatiser
+ *  le processus de chiffrement/déchiffrement.
  */
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
@@ -18,13 +26,30 @@
 
 
 int commandLineStyle(int argc, char* argv[]);
-char* cli_Dechiffrement(char* argv[]);
-char* cli_Chiffrement(char* argv[]);
-char* cli_GenererClef(char* argv[]);
+char* operation_Dechiffrement_CLI(char* argv[]);
+char* operation_Chiffrement_CLI(char* argv[]);
+char* operation_GenererClef_CLI(char* argv[]);
 
 
 
-
+/*  COMMANDLINESTYLE()
+ *
+ *      Est appelé par la fonction main lorsque argc > 1, et gère le projet
+ *  dans le mode CLI (ligne de commmande).
+ *
+ *  PARAMETRES :
+ *      - char* argv[] :
+ *          Tableau de pointeurs vers chaque option fournies à l'appel du
+ *          programme
+ *      - int argc :
+ *          Nombre de pointeurs dans le tableau argv[]
+ *
+ *  RETOURNE :
+ *      - 0 :
+ *          Succès
+ *      - 1 :
+ *          Échec
+ */
 int commandLineStyle(int argc, char* argv[])
 {
 	int estInvalide;
@@ -32,69 +57,69 @@ int commandLineStyle(int argc, char* argv[])
 
 	//	==== VALIDATION ===
 	
-	//	vérifie que les options utilisées sont compatibles
+	//	Vérifie que les options utilisées sont compatibles
 	estInvalide = optionValidation(argc, argv);
 
-	//	si invalide
+	//	Si invalide
 	if ( estInvalide == 1 )
 	{
-		fprintf(stderr, "Option invalide.\n");
+		fprintf(stderr, "usage : Option invalide détectée.\n");
 		return estInvalide;
 	}
 	else if ( estInvalide == 2 )
 	{
-		fprintf(stderr, "Option manquante.\n");
+		fprintf(stderr, "usage : Option manquante.\n");
 		return estInvalide;
 	}
 
-	//	vérifie que toutes les options nécessaires et leur arguments sont présents
+	//	Vérifie que toutes les options nécessaires et leur arguments sont présents
 	estInvalide = finalOptionCheck();
 
 	if ( estInvalide >= 1 )
 	{
-		fprintf(stderr, "options manquantes\n");
+		fprintf(stderr, "usage : Options manquantes\n");
 		return estInvalide;
 	}
 
 
 	//	==== FONCTIONALITE ====
-	//	si l'utilisateur a besoin d'aide
+	//	Si l'utilisateur a besoin d'aide
 	if ( FLAGS[h] == 1 )
 	{
 		printHelp();
 		return 0;
 	}
-	//	déchiffrer un message
+	//	Déchiffrer un message
 	else if ( FLAGS[d] == 1 )
 	{
-		output = cli_Dechiffrement(argv);
+		output = operation_Dechiffrement_CLI(argv);
 
 		if ( output == NULL )
 		{
-			err(2, "CommandLineStyle() : ERREUR\n");
+			err(2, "CommandLineStyle() : Erreur dans l'exécution du programme.\n");
 		}
 	}
-	//	chiffrer un message
+	//	Chiffrer un message
 	else if ( FLAGS[c] == 1 )
 	{
-		output = cli_Chiffrement(argv);
+		output = operation_Chiffrement_CLI(argv);
 
 		if ( output == NULL )
 		{
-			err(2, "CommandLineStyle() : ERREUR\n");
+			err(2, "CommandLineStyle() : Erreur dans l'exécution du programme.\n");
 		}
 	}
-	//	générer une clé
+	//	Générer une clé
 	else if ( FLAGS[g] == 1 )
 	{
-		output = cli_GenererClef(argv);
+		output = operation_GenererClef_CLI(argv);
 
 		if ( output == NULL )
 		{
-			err(2, "CommandLineStyle() : ERREUR\n");
+			err(2, "CommandLineStyle() : Erreur dans l'exécution du programme.\n");
 		}
 	}
-    //  déclarer la version
+    //  Déclarer la version
     else if ( FLAGS[h] == 2 )
     {
         printf(
@@ -105,7 +130,7 @@ int commandLineStyle(int argc, char* argv[])
     }
 	else
 	{
-		printf("DEBUG commandLineStyle() : cette option n'existe pas.\n");
+		printf("commandLineStyle() : cette option n'existe pas.\n");
 		return 1;
 	}
 
@@ -120,7 +145,7 @@ int commandLineStyle(int argc, char* argv[])
 	{
 		char* fileName = argv[PARAMS[o]];
 
-		//	validation du nom de fichier
+		//	Validation du nom de fichier
 		estInvalide = validation_Nom_Fichier(fileName);
 		if ( estInvalide == 1 )
 		{
@@ -154,19 +179,21 @@ int commandLineStyle(int argc, char* argv[])
 
 
 
-/*	CLI_DECHIFFREMENT()
+/*	OPERATION_DECHIFFREMENT_CLI() :
  *
  *	Déchiffre le message avec la clé fournis par l'utilisateur. Ceux_ci peuvent-être
  *	dans des fichiers texte.
  *
  *	PARAMETRE :
- *		argv[]
+ *		- char* argv[]
  *
  *	RETOURNE :
- *		output : message déchiffré
- *		NULL : erreur lors de l'exécution
+ *		- char output[] :
+ *		    Message déchiffré
+ *		- NULL :
+ *		    Erreur lors de l'exécution
  */
-char* cli_Dechiffrement(char* argv[])
+char* operation_Dechiffrement_CLI(char* argv[])
 {
 	int statut;
 	char* message = (char*)malloc(sizeof(char));
@@ -177,7 +204,7 @@ char* cli_Dechiffrement(char* argv[])
 	//	Verification allocation
 	if ( message == NULL || clef == NULL )
 	{
-		warn("Erreur cli_Dechiffrement : échec d'allocation.\n");
+		warn("Erreur operation_Dechiffrement_CLI : échec d'allocation.\n");
 		free(message);
 		free(clef);
 		message = NULL;
@@ -185,17 +212,17 @@ char* cli_Dechiffrement(char* argv[])
 		return NULL;
 	}
 
-	//	==== MESSAGE ====
+	//	==== MESSAGE À DECHIFFRER ====
 
 	lenMessage = 0;
-	//	si le message est entré dans la ligne de commande
+	//	Si le message est entré dans la ligne de commande
 	if ( FLAGS[i] == 1 )
 	{
 		message = validationEntree(message, &lenMessage, argv[ PARAMS[ i ] ]);
 
 		if ( message == NULL )
 		{
-			warn("Erreur cli_Dechiffrement() : message vide ou invalide.\n");
+			warn("Erreur operation_Dechiffrement_CLI() : message vide ou invalide.\n");
 			free(message);
 			free(clef);
 			message = NULL;
@@ -204,7 +231,7 @@ char* cli_Dechiffrement(char* argv[])
 		}
 	}
 	
-	//	si le message est dans un fichier
+	//	Si le message est dans un fichier
 	else if ( FLAGS[I] == 1 )
 	{
 		lenMessage = 0;
@@ -212,7 +239,7 @@ char* cli_Dechiffrement(char* argv[])
 
 		statut = validation_Nom_Fichier(fileName);
 
-		//	si nom de fichier invalide
+		//	Si nom de fichier invalide
 		if ( statut == 1 )
 		{
 			warn("Erreur : '%s' est un nom de fichier invalide. Pour rappel,\n"
@@ -228,10 +255,10 @@ char* cli_Dechiffrement(char* argv[])
 		//	Lecture du fichier
 		message = lireFichier(fileName, message, &lenMessage);
 
-		//	si erreur
+		//	Si erreur
 		if ( message == NULL )
 		{
-			warn("Erreur cli_Dechiffrement() : échec de lecture du fichier%s\n",
+			warn("Erreur operation_Dechiffrement_CLI() : échec de lecture du fichier%s\n",
 					fileName);
 			free(message);
 			free(clef);
@@ -241,7 +268,7 @@ char* cli_Dechiffrement(char* argv[])
 	}
 	else
 	{
-		warn("Erreur cli_Chiffrement() : ni -i ni -I activés. Revoir checkInputs.c\n"
+		warn("Erreur operation_Chiffrement_CLI() : ni -i ni -I activés. Revoir checkInputs.c\n"
 				"IMPERATIVEMENT\n");
 		free(message);
 		free(clef);
@@ -256,7 +283,7 @@ char* cli_Dechiffrement(char* argv[])
 
 	if ( FLAGS[k] == 1 )
 	{
-		//	si la clé est dans la ligne de commande
+		//	Si la clé est dans la ligne de commande
 		clef = validationEntree(clef, &lenClef, argv[ PARAMS[ k ] ]);
 	}
 	else if ( FLAGS[K] == 1 )
@@ -265,10 +292,10 @@ char* cli_Dechiffrement(char* argv[])
 
 		statut = validation_Nom_Fichier(fileName);
 
-		//	si nom de fichier invalide
+		//	Si nom de fichier invalide
 		if ( statut == 1 )
 		{
-			warn("Erreur cli_Dechiffrement() : %s est un nom de fichier\n"
+			warn("Erreur operation_Dechiffrement_CLI() : %s est un nom de fichier\n"
 					"invalide. Pour rappel, ce fichier doit finir avec l'extension\n"
 					"'.txt' et appartenir au répertoire courant.\n", argv[ PARAMS[ K ] ]);
 			free(message);
@@ -283,7 +310,7 @@ char* cli_Dechiffrement(char* argv[])
 
 		if ( clef == NULL )
 		{
-			warn("Erreur cli_Dechiffrement() : lecture du fichier %s échouée.\n",
+			warn("Erreur operation_Dechiffrement_CLI() : lecture du fichier %s échouée.\n",
 					fileName);
 			free(clef);
 			free(message);
@@ -293,7 +320,8 @@ char* cli_Dechiffrement(char* argv[])
 	}
 	else
 	{
-		warn("Erreur cli_Dechiffrement() : ni -k ni -K activés. Revoir checkInputs.c\n"
+		warn("Erreur operation_Dechiffrement_CLI() : ni -k ni -K activés. Revoir\n"
+                " checkInputs.c\n"
 				"IMPERATIVEMENT\n");
 		free(message);
 		free(clef);
@@ -323,7 +351,7 @@ char* cli_Dechiffrement(char* argv[])
 
 	output[lenMessage] = '\0';
 
-	//	libération de message et clef s'ils ont été alloués
+	//	Libération de message et clef s'ils ont été alloués
 	free(message);
 	message = NULL;
 	free(clef);
@@ -338,7 +366,7 @@ char* cli_Dechiffrement(char* argv[])
 
 
 
-/*	CLI_CHIFFREMENT()
+/*	OPERATION_CHIFFREMENT_CLI()
  *
  *	Chiffre le message avec la clé fournis par l'utilisateur. Ceux_ci peuvent-être
  *	dans des fichiers texte.
@@ -350,7 +378,7 @@ char* cli_Dechiffrement(char* argv[])
  *		output : message chiffré
  *		NULL : erreur lors de l'exécution
  */
-char* cli_Chiffrement(char* argv[])
+char* operation_Chiffrement_CLI(char* argv[])
 {
 	int statut;
 	char* messageVig = (char*)malloc(sizeof(char));
@@ -361,7 +389,7 @@ char* cli_Chiffrement(char* argv[])
 	//	Verification allocation
 	if ( messageVig == NULL || clef == NULL )
 	{
-		warn("Erreur cli_Chiffrement : échec d'allocation.\n");
+		warn("Erreur operation_Chiffrement_CLI : échec d'allocation.\n");
 		free(messageVig);
 		free(clef);
 		messageVig = NULL;
@@ -369,17 +397,17 @@ char* cli_Chiffrement(char* argv[])
 		return NULL;
 	}
 
-	//	==== messageVig ====
+	//	==== MESSAGE À CHIFFRER ====
 
 	lenMessageVig = 0;
-	//	si le messageVig est entré dans la ligne de commande
+	//	Si le messageVig est entré dans la ligne de commande
 	if ( FLAGS[i] == 1 )
 	{
 		messageVig = validationEntree(messageVig, &lenMessageVig, argv[ PARAMS[ i ] ]);
 
 		if ( messageVig == NULL )
 		{
-			warn("Erreur cli_Chiffrement() : messageVig vide ou invalide.\n");
+			warn("Erreur operation_Chiffrement_CLI() : messageVig vide ou invalide.\n");
 			free(messageVig);
 			free(clef);
 			messageVig = NULL;
@@ -388,7 +416,7 @@ char* cli_Chiffrement(char* argv[])
 		}
 	}
 	
-	//	si le messageVig est dans un fichier
+	//	Si le messageVig est dans un fichier
 	else if ( FLAGS[I] == 1 )
 	{
 		lenMessageVig = 0;
@@ -396,7 +424,7 @@ char* cli_Chiffrement(char* argv[])
 
 		statut = validation_Nom_Fichier(fileName);
 
-		//	si nom de fichier invalide
+		//	Si nom de fichier invalide
 		if ( statut == 1 )
 		{
 			warn("Erreur : '%s' est un nom de fichier invalide. Pour rappel,\n"
@@ -412,10 +440,10 @@ char* cli_Chiffrement(char* argv[])
 		//	Lecture du fichier
 		messageVig = lireFichier(fileName, messageVig, &lenMessageVig);
 
-		//	si erreur
+		//	Si erreur
 		if ( messageVig == NULL )
 		{
-			warn("Erreur cli_Chiffrement() : échec de lecture du fichier%s\n",
+			warn("Erreur operation_Chiffrement_CLI() : échec de lecture du fichier%s\n",
 					fileName);
 			free(messageVig);
 			free(clef);
@@ -425,7 +453,7 @@ char* cli_Chiffrement(char* argv[])
 	}
 	else
 	{
-		warn("Erreur cli_Chiffrement() : ni -i ni -I activés. Revoir checkInputs.c\n"
+		warn("Erreur operation_Chiffrement_CLI() : ni -i ni -I activés. Revoir checkInputs.c\n"
 				"IMPERATIVEMENT\n");
 		free(messageVig);
 		free(clef);
@@ -440,7 +468,7 @@ char* cli_Chiffrement(char* argv[])
 
 	if ( FLAGS[k] == 1 )
 	{
-		//	si la clé est dans la ligne de commande
+		//	Si la clé est dans la ligne de commande
 		clef = validationEntree(clef, &lenClef, argv[ PARAMS[ k ] ]);
 	}
 	else if ( FLAGS[K] == 1 )
@@ -449,10 +477,10 @@ char* cli_Chiffrement(char* argv[])
 
 		statut = validation_Nom_Fichier(fileName);
 
-		//	si nom de fichier invalide
+		//	Si nom de fichier invalide
 		if ( statut == 1 )
 		{
-			warn("Erreur cli_Chiffrement() : %s est un nom de fichier\n"
+			warn("Erreur operation_Chiffrement_CLI() : %s est un nom de fichier\n"
 					"invalide. Pour rappel, ce fichier doit finir avec l'extension\n"
 					"'.txt' et appartenir au répertoire courant.\n", argv[ PARAMS[ K ] ]);
 			free(messageVig);
@@ -467,7 +495,7 @@ char* cli_Chiffrement(char* argv[])
 
 		if ( clef == NULL )
 		{
-			warn("Erreur cli_Chiffrement() : lecture du fichier %s échouée.\n",
+			warn("Erreur operation_Chiffrement_CLI() : lecture du fichier %s échouée.\n",
 					fileName);
 			free(clef);
 			free(messageVig);
@@ -477,7 +505,8 @@ char* cli_Chiffrement(char* argv[])
 	}
 	else
 	{
-		warn("Erreur cli_Chiffrement() : ni -k ni -K activés. Revoir checkInputs.c\n"
+		warn("Erreur operation_Chiffrement_CLI() : ni -k ni -K activés. Revoir\n"
+                " checkInputs.c\n"
 				"IMPERATIVEMENT\n");
 		free(messageVig);
 		free(clef);
@@ -487,7 +516,7 @@ char* cli_Chiffrement(char* argv[])
 	}
 
 
-	//	==== DECHIFFREMENT ====
+	//	==== CHIFFREMENT ====
 	char * output = (char *)malloc(sizeof(char) * lenMessageVig);
 
 	if ( output == NULL )
@@ -507,7 +536,7 @@ char* cli_Chiffrement(char* argv[])
 
 	output[lenMessageVig] = '\0';
 
-	//	libération de messageVig et clef s'ils ont été alloués
+	//	Libération de messageVig et clef s'ils ont été alloués
 	free(messageVig);
 	messageVig = NULL;
 	free(clef);
@@ -521,18 +550,20 @@ char* cli_Chiffrement(char* argv[])
 
 
 
-/*	CLI_GENERERCLEF()
+/*	OPERATION_GENERERCLEF_CLI()
  *
  *	Génère une clé de longueur donnée par l'utilisateur.
  *
  *	PARAMETRE :
- *		argv[]
+ *		- char* argv[]
  *
  *	RETOURNE :
- *		clef : si succès
- *		NULL : si erreur
+ *		- char clef[] :
+ *		    Clef générée de la longueur demandée par l'utilisateur.
+ *		- NULL :
+ *		    Erreur
  */
-char* cli_GenererClef(char* argv[])
+char* operation_GenererClef_CLI(char* argv[])
 {
 	int lenClef;
 	char* entree;
@@ -543,20 +574,20 @@ char* cli_GenererClef(char* argv[])
 	
 	if ( (lenClef = estInteger(entree)) == -1 )
 	{
-		warn("Erreur cli_GenererClef() usage : entrée invalide, le paramètre de -g\n"
-				"devrait être un nombre entier positif inférieur à MAXLEN (= %d).\n",
+		warn("Erreur operation_GenererClef_CLI() usage : entrée invalide, le paramètre \n"
+                "de -g devrait être un nombre entier positif inférieur à MAXLEN (= %d).\n",
 				MAXLEN);
 		return NULL;
 	}
 
 
-	//	==== GENERATION ====
+	//	==== GÉNÉRATION ====
 	char * clef = genererClef(lenClef);
 
-	//	vérification de succès
+	//	Vérification de succès
 	if ( clef == NULL )
 	{
-		warn("Erreur cli_GenererClef() : génération de clé échouée.\n");
+		warn("Erreur operation_GenererClef_CLI() : génération de clé échouée.\n");
 		return NULL;
 	}
 
