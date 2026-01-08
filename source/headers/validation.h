@@ -7,6 +7,7 @@ char validation_Caractere(char c);
 int validation_Nom_Fichier(char* nomFichier);
 char* validationEntree(char* targetArray, int* targetLengthAddr, char* entree);
 int estInteger(char* entree);
+char* make_Valid_Length(char chaine[]);
 
 
 #endif

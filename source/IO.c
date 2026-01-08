@@ -267,6 +267,9 @@ int saveToFile(char outputArray[])
 {
 	char* fileNameP = (char*)malloc(sizeof(char));
 	int status;
+
+    //  Vérifier que outputArray est de longueur valide, sinon le rendre valide
+    outputArray = make_Valid_Length(outputArray);
 	
 	//	nom du fichier
 	fileNameP = getFileName(fileNameP);

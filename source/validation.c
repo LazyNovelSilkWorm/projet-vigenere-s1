@@ -1,7 +1,14 @@
-/*	Regroupe les fonctions de validations d'entrée utilisateur :
- *		-> entrée de message
+/*=============================================================================
+ *                                VALIDATIONS	
+ *=============================================================================
+ *
+ * 	Regroupe les fonctions de validations d'entrée utilisateur :
  *		-> entrée de longueur de clé
+ *		-> validation d'un caractère
  *		-> entrée de nom de fichier
+ *		-> entrée de message
+ *		-> entrée est un integer
+ *		-> longueur d'une chaine de caractères
  */
 
 #include <stdio.h>
@@ -53,7 +60,7 @@ int validation_Integer(void)
 	}
 
 	//	Vérifier que input est dans l'intervalle 0 < input <= MAXLEN
-	if (input > MAXLEN || input < 1 )
+	if (input > MAXLENKEY || input < 1 )
 	{
 		input = -1;
 	}
@@ -145,7 +152,25 @@ int validation_Nom_Fichier(char* nomFichier)
 }
 
 
-
+/*  VALIDATIONENTREE()
+ *
+ *      Vérifie qu'une entrée est valide, et appelle numEnAscii() si un
+ *  integer est détecté.
+ *
+ *  PARAMETRES :
+ *      - char targetArray[] :
+ *          Tableau où mettre les caractères validés.
+ *      - int* targetLengthAddr :
+ *          Pointeur vers la longueur du tableau.
+ *      - char entree[] :
+ *          Tableau de caractères à valider.
+ *
+ *  RETOURNE :
+ *      - char targetArray[] :
+ *          Tableau de caractères validés
+ *      - NULL :
+ *          Erreur
+ */
 char* validationEntree(char* targetArray, int* targetLengthAddr, char* entree)
 {
 	char* position;
@@ -227,7 +252,7 @@ int estInteger(char* entree)
 		}
 		
 		//	vérifier que la longueur est autorisée
-		if ( longueur >= MAXLEN )
+		if ( longueur > MAXLEN )
 		{
 			warn("Erreur estInteger() usage : longueur de clé (= %d) à générer\n"
 				   "supérieure à MAXLEN (= %d).\n", longueur, MAXLEN);
@@ -240,3 +265,52 @@ int estInteger(char* entree)
 	return longueur;
 }
 
+
+
+
+
+/*  MAKE_VALID_LENGTH()
+ *
+ *      Prend une chaine de caractères et si sa longueur dépasse MAXLEN,
+ *  réalloc cette chaine afin d'éviter un buffer overflow. Très utile
+ *  dans le cas où un utilisateur met trop de chiffres dans son message,
+ *  qui dépasseraient alors la longueur maximale autorisée.
+ *
+ *  PARAMETRES :
+ *      - char chaine[] :
+ *          Chaine de caractères
+ *  
+ *  RETOURNE :
+ *      - char chaine[] :
+ *          Si elle est trop longue, la chaine est réalloc à MAXLEN + 1
+ *          éléments (pour '\0').
+ *          Sinon, inchangée.
+ */
+char* make_Valid_Length(char chaine[])
+{
+    int loops;
+
+    loops = 0;
+
+    while ( chaine[loops] != '\0' )
+    {
+        //  Si chaine[] est trop longue
+        if ( loops > MAXLEN )
+        {
+            chaine = realloc(chaine, MAXLEN);
+            //  nouvelle fin de chaine de caractères
+            chaine[MAXLEN] = '\0';
+            warn("Warning : Le résultat dépasse la taille maximale autorisée MAXLEN\n"
+                    "(= %d), une partie risque d'être perdue. Cela peut être dû à\n"
+                    "des chiffres qui une fois convertis augmentent la taille du\n"
+                    "message.\n", MAXLEN);
+            break;
+        }
+    }
+
+    return chaine;
+}
+
+
+
+                
