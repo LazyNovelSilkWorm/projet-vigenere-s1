@@ -1,3 +1,74 @@
+/*=============================================================================
+ *                            CLI : CHECK INPUTS
+ *=============================================================================
+ * 
+ *      Ce fichier contient les fonctions permettant de vérifier la 
+ *  validité et compatibilité des arguments entrés par l'utilisateur dans la
+ *  ligne de commande.
+ *
+ *      Pour ce faire, checkInputs.c utilise plusieurs variables globales.
+ *  Particulièrement :
+ *      - int FLAGS[9] :
+ *          Les options et opérations entrées et leur statut. Chaque élément
+ *          contient une à deux options
+ *                g, i, I, k, K, o, d, c, hv 
+ *              { 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+ *          qui par défaut ont toutes la valeur 0. Si une option est détectée,
+ *          on vérifie d'abord que son statut est "inactif" (0). Elle est alors
+ *          activée (on change de 0 à 1, ou 2 dans le cas de l'option v).
+ *          Ensuite, toutes les options incompatibles reçoivent la valeur -1,
+ *          soit "incompatibles".
+ *
+ *          Si l'option détectée est incompatible avec une option précédente,
+ *          alors on annonce une erreur d'usage et on ne continue pas plus
+ *          loin.
+ *          
+ *          Par exemple : si on veut générer une clé,
+ *          alors on n'a pas besoin d'entrer un message. Donc si "-g" est
+ *          détectée, l'option d'entrer un message "-i" est incompatible. Si on
+ *          fait cela avec toutes les options, on trouve, à l'activation de
+ *          l'option g :
+ *               -g, -i, -I, -k, -K,-o,-c,-d,-hv
+ *              { 1, -1, -1, -1, -1, 0, 0, 0, -1 }  
+ *          Avec FLAGS, on peut ainsi facilement vérifier que la commande entrée
+ *          est valide.
+ *      
+ *      - int PARAMS[6] :
+ *          Ceci contient la position dans argv des paramètres associés à chaque
+ *          option qui en nécessite une. En gardant le même ordre que FLAGS par
+ *          clarté, on a :
+ *               -g, -i, -I, -k, -K, -o
+ *             { %d, %d, %d, %d, %d, %d }
+ *      
+ *      - int g, i, I, k, K, o, c, d, h :
+ *          Chaque variable contient la position de l'option respective dans
+ *          FLAGS[] et PARAMS[]
+ *              g = 0
+ *              i = 1
+ *              I = 2
+ *              k = 3
+ *              ...
+ *              h = 8
+ *
+ *      g = 0;	// -g : générer une clé 
+ *      i = 1;	// -i : entrée du message dans une chaine de caractères <input string> 
+ *      I = 2;	// -I : entrée du message dans un fichier texte <message_filename> 
+ *      k = 3;	// -k : entrée de la clé dans une chaine de caractères <key string> 
+ *      K = 4;	// -K : entrée de la clé dans un fichier texte : <key_filename> 
+ *      o = 5;	// -o : sortie affichée dans un fichier texte : <output_filename> 
+ *      d = 6;	// -d : déchiffrer le message 
+ *      c = 7;	// -c : chiffrer le message 
+ *      h = 8;	// -h or -v : afficher la liste d'aide ou la version 
+ *
+ *
+ *
+ *  Toutes ces variables sont définies dans "variables.c"
+ */
+
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
@@ -5,29 +76,9 @@
 #include "headers/variables.h"
 #include "headers/validation.h"
 
-//		VARIABLES GLOBALES (tableaux dans "headers/variables.h"
-//int FLAGS[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};	//taille 9
-//int PARAMS[] = {0, 0, 0, 0, 0, 0};		//taille 6
-char LASTOPT;
-/*
- * int FLAGS[] :
- * 	Tableau contenant statut de chaque option : { g ; i ; I ; k ; K ; d ; c ; hv }
- * 		- 0 : option inactivée
- * 		- 1 : option activée (sauf pour v)
- * 		- 2 : option secondaire activée, mais pas la principale (seulement pour v)
-* 		- -1 : option est incompatible avec celles déjà sélectionnées
- * 			   
- * 			   {g, i, I, k, K, o, d, c, hv}
- */
-
-/*
- * int PARAMS[] :
- * 	Tableau contenant la position en argv[] de chaque argument aux options -g, -i, -k,
- * -K et -o respectivement.
- *
- * 	 PARAMS[] = {g, i, I, k, K, o}
- */
-//PARAMS[6] = {0, 0, 0, 0, 0, 0};
+//		VARIABLE GLOBALE
+char LASTOPT;   //  la dernière option enregistrée. permet d'associer un paramètre
+                //  à son option respective.
 
 /*
  * char LASTOPT :
@@ -45,49 +96,10 @@ char LASTOPT;
  * ========================
 */
 int optionValidation(int argc, char* argv[]);
-void checkFlags(char argvV[]);
+int checkFlags(char argvV[]);
 int finalOptionCheck(void);
 
 
-
-/*
- * ============================================================================
- * Main
- * ====
- */
-/*
-int main(int argc, char* argv[])
-{
-	//int counter;
-	int statusID, i;	// statusID sera l'état d'exécution du programme. Permettra d'activer 
-						//   les erreurs dans la fonction future statusError(statusID)
-
-	printf("nom de programme : %s", argv[0]);
-	printf("argc = %d\n\n", argc);
-
-	for (i = 0 ; i < argc ; ++i)
-	{
-		printf("TEST: argv[%d] = %s\n", i, argv[i]);
-	}
-	
-	if (argc < 2)
-	{
-		printf("ERROR : action non définie, vérifier -h si vous avez besoin d'aide.\n");
-		return 1;
-	}
-
-	
-	statusID = optionValidation(argc, argv);
-	if (statusID > 0)
-	{
-		//statusError(statusID);
-		return statusID;
-	}
-
-	
-	return 0;
-}
-*/
 
 
 
@@ -103,7 +115,7 @@ int main(int argc, char* argv[])
 
 
 /*
- * OPTION VALIDATION
+ * OPTIONVALIDATION()
  *
  * 		Ici on pose les options déclarées dans la table de compatibilité FLAGS[] avec
  * 	l'aide de la fonction checkFlags(), et leur argument est mis dans PARAMS[] s'ils
@@ -112,27 +124,25 @@ int main(int argc, char* argv[])
  * 		Cette fonction vérifie aussi que les options nécéssitant des arguments les ont.
  *
  * ARGUMENTS :
- * 		- int argc : nombre d'arguments dans la ligne de commande
- * 		- char* argv : tableau de pointeurs vers les valeurs de chaque argument dans
- * 		la ligne de commande.
+ * 		- int argc :
+ * 		    Nombre d'arguments dans la ligne de commande
+ * 		- char* argv[] :
+ * 		    Tableau de pointeurs vers les valeurs de chaque argument dans
+ * 		    la ligne de commande.
  *
  * 	RETOURNE :
- * 		statusID : ---------------------------TBD-------------------------------------
+ * 		- 0 :
+ * 		    Succès
+ * 		- 1 :
+ * 		    Échec
  *
- * PARAMS[] = {g, i, I, k, K, o}
  */
 int optionValidation(int argc, char* argv[])
 {
 	extern int FLAGS[], PARAMS[];
 	extern char LASTOPT;
-	int count, vector, reserved;	//, g, i, I, k, K, o;
+	int count, vector, reserved, isInvalid;	
 
-	//g = 0;
-	//i = 1;
-	//I = 2;
-	//k = 3;
-	//K = 4;
-	//o = 5;
 	LASTOPT = '\0';
 	reserved = -1;
 
@@ -140,7 +150,8 @@ int optionValidation(int argc, char* argv[])
 	for (vector = 1 ; vector < argc ; ++vector)
 	{
 
-		/* Vérifie si la dernière position finissait avec une option nécessitant un argument */	
+		/* Vérifie si la dernière position finissait avec une option nécessitant
+         * un argument */	
 		for (count = 0 ; count < 5 ; ++count)
 		{
 			if (PARAMS[count] == vector)
@@ -159,7 +170,15 @@ int optionValidation(int argc, char* argv[])
 		else if (argv[vector][0] == '-')
 		{
 			reserved = 0;
-			checkFlags(argv[vector]);
+			isInvalid = checkFlags(argv[vector]);
+            
+            //  L'option est incompatible
+            if ( isInvalid == 1 )
+            {
+                fprintf(stderr, "optionValidation() : une option incompatible a été"
+                        " détectée.\n");
+                return 1;
+            }
 		}
 		/* Vérifie si la variable reserved est active. Si c'est le cas, elle ajoute la 
 		 * position de cet argument dans PARAMS, à l'index attribué à cette option.
@@ -190,10 +209,10 @@ int optionValidation(int argc, char* argv[])
 		}
 		else
 		{
-			fprintf(stderr, "Erreur optionValidation() : entrée invalide => %s\n", argv[vector]);
+			fprintf(stderr, "Erreur optionValidation() : entrée invalide => %s\n",
+                    argv[vector]);
 
-			return 1;	//remplacer avec le statusID de l'erreur. à décider
-			//statusError(<error ID>);
+			return 1;
 		}
 
 	}
@@ -205,21 +224,26 @@ int optionValidation(int argc, char* argv[])
 						   la valeur 1, 2 out -1. On ne doit que vérifier une valeur.
 						   la valeur g est à l'index 0 donc elle a été choisie*/
 	{
-		fprintf(stderr, "Erreur optionValidation() : action non définie. Vérifier -h si\n"
+		fprintf(stderr, "Erreur optionValidation() : action non définie. Vérifier -h "
 				"si besoin.\n");
-		return 2;
+		return 1;
 	}
 
 	return 0;
 }
 
 
+
+
+
+
+
 /*
  * CHECK FLAGS :
 
  * 		Modifie le tableau de compatibilité FLAGS[]. Pour chaque option déclarée,
- * 		checkFlags(), vérifie si cette option est bien non-activée, et n'a pas
- * 		été invalidée par une option précédente.
+ *  checkFlags(), vérifie si cette option est bien non-activée, et n'a pas été 
+ *  invalidée par une option précédente.
  *
  *	- option valide :
  *		--> option est activée (1 ou 2)
@@ -231,29 +255,23 @@ int optionValidation(int argc, char* argv[])
  * 	clé en même temps de	déchiffrer un message. Par contre, -d est compatible
  * 	avec -o qui indique si le messagedéchiffrer doit être mis dans un fichier texte.)
  *
+ *
  * 	ARGUMENTS :
- * 		- char argvV[] : un argument de la ligne de commande que la fonction optionValidation() a
- * 		déterminé d'être un bloc d'options.
+ * 		- char argvV[] :
+ * 		    Un argument de la ligne de commande que la fonction optionValidation() a
+ * 		    déterminé d'être un bloc d'options.
+ *  
+ *  RETOURNE :
+ *      - 0 :
+ *          Valide
+ *      - 1 :
+ *          Invalide
  */
-void checkFlags(char argvV[])
+int checkFlags(char argvV[])
 {
 	int f;
 	extern char LASTOPT;
 	extern int FLAGS[];
-	//extern int g, i, I, k, K, o, d, c, h;
-	
-	/*
-	 * Position pour chaque option dans FLAGS[]
-	 */
-	//g = 0;	// -g : générer une clé 
-	//i = 1;	// -i : entrée du message dans une chaine de caractères <input string> 
-	//I = 2;	// -I : entrée du message dans un fichier texte <message_filename> 
-	//k = 3;	// -k : entrée de la clé dans une chaine de caractères <key string> 
-	//K = 4;	// -K : entrée de la clé dans un fichier texte : <key_filename> 
-	//o = 5;	// -o : sortie affichée dans un fichier texte : <output_filename> 
-	//d = 6;	// -d : déchiffrer le message 
-	//c = 7;	// -c : chiffrer le message 
-	//h = 8;	// -h or -v : afficher la liste d'aide ou la version 
 
 	for (f = 1 ; argvV[f] != '\0' ; ++f)
 	{
@@ -346,15 +364,29 @@ void checkFlags(char argvV[])
 		}
 		else
 		{
-			printf("ERROR : option invalide\n");
-			//statusError(<error ID>);
+			fprintf(stderr, "checkFlags() : ERROR : option %c invalide\n", argvV[f]);
 		}
 	}
 	LASTOPT = argvV[f - 1];
+
+    return 0;
 }
 			
 
-
+/*  FINALOPTIONCHECK()
+ *
+ *      Dernière vérification, cette fois-ci globale. Vérifie que les options
+ *  et les paramètres nécessaires ont bien été entrées par l'utilisateur.
+ *
+ *  Par exemple : si l'utilisateur cherche à chiffrer un message, il faut bien
+ *  qu'il aie entré un message.
+ *
+ *  RETOURNE :
+ *      - 0 :
+ *          Succès
+ *      - 1 :
+ *          Échec
+ */
 int finalOptionCheck(void)
 {
 	//extern int FLAGS[];
@@ -383,29 +415,9 @@ int finalOptionCheck(void)
 	   )
 	{
 		fprintf(stderr, "Erreur finalOptionCheck() : clé ou message manquants\n");
-		//exit(EXIT_FAILURE);
 		return 1;
 	}
 
-/*
-	printf("\n\n______________________\n");
-	printf("option validation :\n");
-	printf("FLAGS = {-g,-i,-I,-k,-K,-o,-d,-c,-hv}\n");
-	printf("FLAGS = { %d", FLAGS[0]);
-	for (int loop = 1 ; loop <= 8 ; ++loop)
-	{
-		printf(", %d", FLAGS[loop]);
-	}
-	printf("}\n");
-
-	printf("\nPARAM = {-g,-i,-I,-k,-K,-o}\n");
-	printf("PARAM = { %d", PARAMS[0]);
-	for (int loop = 1 ; loop <= 5 ; ++loop)
-	{
-		printf(", %d", PARAMS[loop]);
-	}
-	printf("}\n");
-*/
 	return 0;
 }
 
