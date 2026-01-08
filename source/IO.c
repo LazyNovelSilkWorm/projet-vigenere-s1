@@ -1,15 +1,16 @@
 /*=============================================================================
- *                              Input/Output
+ *                          TUI : INPUT / OUTPUT
  *=============================================================================
  *
- *      Cette portion du programme contient les fonctions intéragissant
+ *      Cette portion du programme contient les fonctions qui intéragissant
  *  avec l'utilisateur.
  *      
  *      La fonction validation_Integer() en revanche, de part de sa spécialisa-
- *  -lisation, se trouve dans "source/validation.c". Seules quelques autres
- *  fonctions (operation_Chiffrement_Menu(), operation_Dechiffrement_Menu()) 
- *  qui demandent une intéraction utilisateur, mais pas assez conséquente pour
- *  nécessiter l'utilisation d'une fonction externe.
+ *  -lisation, se trouve dans "source/validation.c". Seules elle et quelques
+ *  autres fonctions (menuStyle(), operation_Chiffrement_Menu() et 
+ *  operation_Dechiffrement_Menu()) demandent une intéraction utilisateur,
+ *  mais pas assez conséquente pour nécessiter l'utilisation d'une fonction 
+ *  externe.
  *
  */
 
