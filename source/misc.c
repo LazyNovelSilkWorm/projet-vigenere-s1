@@ -1,3 +1,14 @@
+/*=============================================================================
+ *                              MISCELLANEOUS
+ *=============================================================================
+ *
+ *      Contient le menu d'aide pour le projet, qui se présente de façon simil-
+ *  -aire à un $man.
+ */
+
+
+
+
 #include <stdio.h>
 
 void printHelp(void){	

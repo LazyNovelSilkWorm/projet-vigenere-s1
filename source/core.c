@@ -1,3 +1,15 @@
+/*=============================================================================
+ *                          COEUR DU PROJET
+ *=============================================================================
+ *
+ *      Ce module contient les fonctions au coeur du projet Vigenère. Celles-ci
+ *  permettent de chiffrer ou déchiffrer un caractère, ou de générer une clé de
+ *  longueur donnée. Ce sont les fonctionalités principales du projet.
+ */
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,57 +18,29 @@
 
 
 
-/*
- * 		Ici sont définies et créées les fonctions au coeur du projet :
- * 		chiffrer, déchiffrer et générer. Ces fonctionnalités sont les
- * 		actions principales que doit exécuter le projet.
- */
 
 char encrypt(char enMessage, char key);
 char decrypt(char deCypher, char key);
 char* genererClef(int length);
 
 
-//int main(int argc, char* argv[])
-//{
-	//char result, origin;
-
-//	++argc;
-//	if (argv[1][0] == 'e')
-//	{
-//		printf("%c\n", encrypt(argv[2][0], argv[3][0]));
-//	}
-//	else if (argv[1][0] == 'd')
-//	{
-//		printf("%c\n", decrypt(argv[2][0], argv[3][0]));
-//	}
-//
-	/*
-	printf("message = %c, key = %c\n", TESTMES, TESTKEY);
-	//test encrypt()
-	result = encrypt(TESTMES, TESTKEY);
-	printf("result = %c\n", result);
-
-	origin = decrypt(result, TESTKEY);
-	printf("original = %c\n", origin);
-	*/
-//	return 1;
-//}
 
 
 
 
 
-/* encrypt()
+/* ENCRYPT()
  *
  * Chiffre un caractère avec le caractère de clé fourni.
  *
  *	PARAMETRES :
- * 		- enMessage : caractère de message à chiffrer
- * 		- key : caractère de la clé associé
+ * 		- char enMessage :
+ * 		    Caractère de message à chiffrer
+ * 		- char key :
+ * 		    Caractère de la clé associé
  *
  * 	RETOURNE :
- * 		- enCypher : caractère de message chiffré
+ * 		- char enCypher : caractère de message chiffré
  */
 char encrypt(char enMessage, char key)
 {
@@ -73,13 +57,15 @@ char encrypt(char enMessage, char key)
 }
 
 
-/* decrypt()
+/* DECRYPT()
  *
  * Déchiffre un caractère avec le caractère de clé fourni.
  *
  * 	PARAMETRES :
- * 		- deCypher : caractère de message à déchiffrer
- * 		- key : caractère de la clé associé
+ * 		- deCypher :
+ * 		    Caractère de message à déchiffrer
+ * 		- key :
+ * 		    Caractère de la clé associé
  *
  * 	RETOURNE :
  * 		- deMessage : caractère de message déchiffré
@@ -99,15 +85,17 @@ char decrypt(char deCypher, char key)
 }
 
 
-/* genererClef()
+/* GENERERCLEF()
  *
  * Génère une clé aléatoire de longueur length.
  *
  * 	PARAMETRE :
- * 		- length : longueur de la clé, integer strictement positif
+ * 		- int length : 
+ * 		    Longueur de la clé, integer strictement positif
  * 	
  * 	RETOURNE :
- * 		- key : clé générée aléatoirement. Si erreur retourne NULL
+ * 		- char key[] : 
+ * 		    Clé générée aléatoirement. Si erreur retourne NULL
  */
 char* genererClef(int length)
 {
@@ -115,7 +103,7 @@ char* genererClef(int length)
 
 	i = 0;
 	//	Vérifier que la longueur demandée est valide
-	if (length <= 0 || length > MAXLEN)
+	if (length <= 0 || length > MAXLENKEY)
 	{
 		return NULL;
 	}
