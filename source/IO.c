@@ -1,3 +1,21 @@
+/*=============================================================================
+ *                              Input/Output
+ *=============================================================================
+ *
+ *      Cette portion du programme contient les fonctions intéragissant
+ *  avec l'utilisateur.
+ *      
+ *      La fonction validation_Integer() en revanche, de part de sa spécialisa-
+ *  -lisation, se trouve dans "source/validation.c". Seules quelques autres
+ *  fonctions (operation_Chiffrement_Menu(), operation_Dechiffrement_Menu()) 
+ *  qui demandent une intéraction utilisateur, mais pas assez conséquente pour
+ *  nécessiter l'utilisation d'une fonction externe.
+ *
+ */
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
@@ -12,26 +30,6 @@ char * getFileName(char* inputFileName);
 char * getFromFile(char targetArray[], int* targetLengthAddr);
 char * getFromUser(char targetArray[], int* targetLengthAddr);
 int saveToFile(char outputArray[]);
-/*
-int main(int)
-{
-	char* message = (char *)malloc(sizeof(char));
-	int mesLen = 0;
-	
-	if (message == NULL)
-	{
-		err(2, "DEBUG : allocation mémoire 'message' echouée.\n");
-	}
-	getFromFile(message, &mesLen);
-	printf("message = %s\n", message);
-	printf("mesLen = %d\n", mesLen);
-
-	free(message);
-	message = NULL;
-
-	return 0;
-}
-*/
 
 
 
@@ -39,11 +37,14 @@ int main(int)
  *
  *	Cette fonction prend de l'utilisateur un nom de fichier valide.
  *
+ *	PARAMETRE :
+ *	    - char inputFileName[] :
+ *	        Nom du fichier à recevoir de l'utilisateur
  *	RETOURNE :
- *		- inputFileName[] :
- *			Nom du fichier à remplir. 
+ *		- char inputFileName[] :
+ *			Nom du fichier 
  *		- NULL
- *			échec
+ *			Échec
  */
 char * getFileName(char* inputFileName)
 {
@@ -106,8 +107,10 @@ char * getFileName(char* inputFileName)
  *		- int* targetLengthAddr
  *
  *	RETOURNE :
- *		0	échec
- *		1	succès
+ *		- NULL
+ *	    	Échec
+ *		- char targetArray[] :
+ *  		contenu du fichier
  */
 char* getFromFile(char targetArray[], int* targetLengthAddr)
 {
@@ -183,13 +186,15 @@ char* getFromFile(char targetArray[], int* targetLengthAddr)
  *	n'appartenant pas à l'alphabet.
  *
  * 	PARAMETRES
- *		- targetArray[] :
- *			le tableau keyArray[] ou inputArray[]
- *		- targetLengthAddr :
- *			pointeur vers la longueur du tableau indiqué
+ *		- char targetArray[] :
+ *			Le tableau keyArray[] ou inputArray[]
+ *		- int* targetLengthAddr :
+ *			Pointeur vers la longueur du tableau indiqué
  *
  *	RETOURNE
- *		- targetArray[]
+ *		- char targetArray[]
+ *          Tableau keyArray[] ou inputArray[] maintenant rempli par
+ *          l'utilisateur.
  */
 char * getFromUser(char targetArray[], int* targetLengthAddr)
 {
@@ -248,11 +253,14 @@ char * getFromUser(char targetArray[], int* targetLengthAddr)
  *	fonction demande le nom du fichier.
  *
  *	PARAMETRES :
- *		- outputArray[]
+ *		- char outputArray[]
+ *		    Chaine de caractères à sauver dans un fichier.
  *
  *	RETOURNE :
- *		0	succès
- *		1	échec
+ *		- 0 :
+ *		    Succès
+ *		- 1 :
+ *		    Échec
  */
 int saveToFile(char outputArray[])
 {
