@@ -81,7 +81,8 @@ int menuStyle(void)
 	}
 	else if ( operation == 'v' )
 	{
-		printf("Projet Vigenere, Rendu Final, v2.0\n");
+		//printf("Projet Vigenere, Rendu Final, v2.0\n");
+        version();
 		return 0;
 	}
 	else

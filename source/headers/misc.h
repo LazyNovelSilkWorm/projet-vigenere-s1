@@ -2,5 +2,6 @@
 #define MISC_H
 
 void printHelp(void);
+void version(void);
 
 #endif

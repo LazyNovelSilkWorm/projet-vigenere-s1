@@ -3,7 +3,7 @@
  *=============================================================================
  *
  *      Contient le menu d'aide pour le projet, qui se présente de façon simil-
- *  -aire à un $man.
+ *  -aire à un $man, et la version du programme.
  */
 
 
@@ -82,7 +82,7 @@ void printHelp(void){
 		"\t\taffiche le menu d'aide.\n"
         "\n"
 		"\t-v\n"
-		"\t\taffiche la version du programme.\n"
+		"\t\taffiche la version du programme. (Marche le mieux en plein écran).\n"
 		"\n"
 		"\tSi aucune option n'est mise, un menu déroulant permet à l'utilisateur\n"
 		"\td'intéragir par eux-même avec le programme.\n"
@@ -104,8 +104,45 @@ void printHelp(void){
 	printf("%s", tab);
 }
 
-//int main(void)
-//{
-//	printHelp();
-//	return 0;
-//}
+
+
+
+
+void version(void) {
+
+	printf("             NPPPPPPPP\n");
+	printf("           POPPPI CNPPPP\n");
+	printf("          PPPL        PQPL\n");
+	printf("         OPP           PPQ\n");
+	printf("         OOO            PPQ\n");
+	printf("        JPOK            PPP\n");
+	printf("        GPPL            PPP         KQQQ\n");
+	printf("    OOOOPPPPPPPPPPPPPPPPPPPPQQPPQQQQQ  PRQ               RRRRRS              \033[38;5;202mvigenere-tool\033[0m\n");
+	printf("    OOOOOPPPPPPPPPPPPPPPPPPPPQQQQQQQQ  NQP      PRRRRRRRRRL  QR             --------------------------------\n");
+	printf("    OOOOPPPPPPPPPPPPPPPPPPQI        PQQQM     QRQRP      RRRRRR              \033[34mAlgorithm:\033[0m Vigenere Cipher\n");
+	printf("    OOOOPPPPPPPPPPPPPPPPPPPQ               QQRQR  O                          \033[34mVersion:\033[0m 1.0.0\n");
+	printf("    OOOOPPPPPPPPPPPPPPPPPPPPQQQQQQQQQQN NQQQQH  HOOPM         PRRSRQ         \033[34mPlatform:\033[0m Linux\n");
+	printf("    OOOOPPPPPPPPPPPPPPPO              QQQQQQK     MPPPPQQQQQRRRO  SR         \033[34mLanguage:\033[0m C\n");
+	printf("    OOOOPPPPPPPP   NPPP            QQQQQ  NRRQ                RRRRSS         \033[34mPublication date:\033[0m January 2025\n");
+	printf("    MOOOPPPPPPPF    PPPPQQPPPQQQQQQQQN      QQRQ                PO           \033[34mAuthors:\033[0m Henry\n");
+	printf("     OOOPPPPPPPPN  PPPPPPPPLLLMMMMM           RQRQ                            	     Gabriel\n");
+	printf("     NOOOPPPPPPPP GPPPPPPQP          QQQQQR     QRRR              SSSSRO      	     Maxime\n");
+	printf("       POPPPPPPPPPPPPPPPPPPQPQQQQQQQQQP  MQ       RRRRRRRRRRRRRRSRS   SS      	     Maelie\n");
+	printf("        GPPOPPPPPPPPPPPPPPQ          QQRQQQ                       SSSSRS     \033[34mUsage:\033[0m Encrypt / Decrypt\n");
+	printf("             MOOOOOOOOI     \033[38;5;202m__      ___                   __\033[0m\n");
+	printf("                		  \033[38;5;202m\\ \\    / (_)                  \\_\\ \033[0m         \033[34mvigenere -h for more information\033[0m\n");
+	printf(" 		   \033[38;5;202m\\ \\  / / _  __ _  ___ _ __   ___ _ __ ___\033[0m\n");
+	printf(" 		    \033[38;5;202m\\ \\/ / | |/ _` |/ _ \\ '_ \\ / _ \\ '__/ _ \\\033[0m\n");
+	printf(" 		     \033[38;5;202m\\  /  | | (_| |  __/ | | |  __/ | |  __/\033[0m\n");
+	printf(" 		      \033[38;5;202m\\/   |_|\\__, |\\___|_| |_|\\___|_|  \\___|\033[0m\n");
+	printf("      			               \033[38;5;202m__/ |               \033[34mENCRYPTED●\033[0m\n");
+	printf("    				      \033[38;5;202m|____/\033[0m\n");
+
+
+
+
+}
+
+// \033[34m pour bleu
+// \033[0m pour reset couleur
+// \033[38;5;202m pour orange

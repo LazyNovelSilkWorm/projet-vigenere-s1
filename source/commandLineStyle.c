@@ -122,10 +122,11 @@ int commandLineStyle(int argc, char* argv[])
     //  Déclarer la version
     else if ( FLAGS[h] == 2 )
     {
-        printf(
+        /*printf(
                 "Vigenere v1.5\n"
                 "Groupe E13 - CYBER 1\n"
-              );
+              );*/
+        version();
         return 0;
     }
 	else
