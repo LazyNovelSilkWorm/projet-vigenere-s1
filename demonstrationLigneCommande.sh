@@ -3,7 +3,7 @@
 ./application.sh
 
 echo "Ceci est une démonstration présentant la fonctionnalité 'ligne de commande'
-ou 'TUI' du projet."
+ou 'CLI' du projet."
 
 printf "\n\n"
 
