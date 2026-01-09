@@ -9,7 +9,8 @@
  *		-> entrée de message
  *		-> entrée est un integer
  *		-> longueur d'une chaine de caractères
- *		-> convertir les chiffres en leur valeur alphabétique
+ *		-> convertir les chiffres en leur valeur alphabétique (afin qu'ils
+ *		   soient valides)
  */
 
 #include <stdio.h>
@@ -338,7 +339,29 @@ char* make_Valid_Length(char chaine[])
 
 
                 
-
+/*  NUMENASCII()
+ *
+ *      Convertit un caractère représentant un chiffre par sa version alphabétique
+ *  dans targetArray[]. Permet de chiffrer des nombres.
+ *
+ *  Exemple : 1 --> "UN"
+ *            2 --> "DEUX"
+ *
+ *  PARAMETRES :
+ *      - char targetArray[] :
+ *          Chaine de caractères à laquelle ajouter la version alphabétique du
+ *          chiffre.
+ *      - int* targetLengthAddr :
+ *          Pointeur vers la longueur du tableau targetArray[].
+ *      - char num :
+ *          Caractère compris entre '0' et '9'.
+ *
+ *  RETOURNE :
+ *      - targetArray[] :
+ *          Chaine de caractères complétée.
+ *      - NULL :
+ *          Échec de la réallocation de mémoire.
+ */
 char* numEnAscii(char targetArray[], int *targetLengthAddr, char num)
 {
     static const char *words[10] = {
@@ -356,11 +379,12 @@ char* numEnAscii(char targetArray[], int *targetLengthAddr, char num)
         return targetArray;
     }
 
+    //  récupération de la valeur alphabétique associée.
     const char *w = words[num - '0'];
     int word_len = strlen(w);
-    printf("DEBUG validation.c : numEnAscii() : word_len = %d\n", word_len);
     int old_len = *targetLengthAddr;
 
+    // réallocation de targetArray[]
     char *tmp = realloc(targetArray, old_len + word_len + 1);
 
     if ( tmp == NULL)
@@ -371,6 +395,7 @@ char* numEnAscii(char targetArray[], int *targetLengthAddr, char num)
 
     targetArray = tmp;
 
+    //  copie du bloc mémoire de w vers targetArray[]
     memcpy(targetArray + old_len, w, word_len);
     *targetLengthAddr = old_len + word_len; 
     targetArray[*targetLengthAddr] = '\0';
