@@ -85,11 +85,24 @@ char* lireFichier(const char* nomFichier, char* contenuFichier, int* lenContenuA
 		 * 		break;
 		 * }
 		 */
+        if ( c >= '0' && c <= '9' )
+        {
+            contenuFichier = numEnAscii(contenuFichier, lenContenuAddr, c);
+            if ( contenuFichier == NULL )
+            {
+                return NULL;
+            }
+        }
+        
 		if ( (c = validation_Caractere(c)) != '\0' )
 		{
 			contenuFichier[*lenContenuAddr] = c;
 			++(*lenContenuAddr);
 			contenuFichier = realloc(contenuFichier, *lenContenuAddr + 2);
+            if ( contenuFichier == NULL )
+            {
+                return NULL;
+            }
 		}
 
 		if ( *lenContenuAddr >= MAXLEN )

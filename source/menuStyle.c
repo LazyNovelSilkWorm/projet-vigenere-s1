@@ -139,7 +139,7 @@ int menuStyle(void)
 	return 0;
 }
 
-/*	ACTION_CHIFFREMENT()
+/*	OPERATION_CHIFFREMENT()
  *
  *	    L'utilisateur cherche à chiffrer un message
  *
@@ -331,7 +331,7 @@ char * operation_Chiffrement_Menu(void)
 
 
 
-/*	ACTION_DÉCHIFFREMENT :
+/*	OPERATION_DÉCHIFFREMENT :
  *
  *	L'utilisateur cherche à déchiffrer un message
  *
@@ -520,7 +520,7 @@ char * operation_Dechiffrement_Menu(void)
 }
 
 
-/*	ACTION_GENERER()
+/*	OPERATION_GENERER()
  *
  *	L'utilisateur cherche à générer une clé de chiffrement.
  *

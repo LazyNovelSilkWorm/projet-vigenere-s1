@@ -9,6 +9,7 @@
  *		-> entrée de message
  *		-> entrée est un integer
  *		-> longueur d'une chaine de caractères
+ *		-> convertir les chiffres en leur valeur alphabétique
  */
 
 #include <stdio.h>
@@ -17,6 +18,7 @@
 #include <err.h>
 
 #include "headers/variables.h"
+#include "headers/validation.h"
 
 
 
@@ -179,10 +181,22 @@ char* validationEntree(char* targetArray, int* targetLengthAddr, char* entree)
 	while (*position != '\0' && *targetLengthAddr < MAXLEN)
 	{
 		//	numAscii()
+        if ( *position >= '0' && *position <= '9' )
+        {
+            targetArray = numEnAscii(targetArray, targetLengthAddr, *position);
+            ++position;
+            continue;
+        }
 
 		if ( validation_Caractere(*position) != '\0' )
 		{
 			targetArray = realloc(targetArray, *targetLengthAddr + 2);
+
+            if ( targetArray == NULL )
+            {
+                warn("validationEntree() : réallocation échouée.\n");
+                return NULL;
+            }
 
 			targetArray[*targetLengthAddr] = validation_Caractere(*position);
 			++(*targetLengthAddr);
@@ -285,6 +299,8 @@ int estInteger(char* entree)
  *          Si elle est trop longue, la chaine est réalloc à MAXLEN + 1
  *          éléments (pour '\0').
  *          Sinon, inchangée.
+ *      - NULL :
+ *          Échec / Erreur
  */
 char* make_Valid_Length(char chaine[])
 {
@@ -298,6 +314,12 @@ char* make_Valid_Length(char chaine[])
         if ( loops > MAXLEN )
         {
             chaine = realloc(chaine, MAXLEN);
+
+            if ( chaine == NULL )
+            {
+                warn("make_Valid_Length() : réallocation échouée.\n");
+                return NULL;
+            }
             //  nouvelle fin de chaine de caractères
             chaine[MAXLEN] = '\0';
             warn("Warning : Le résultat dépasse la taille maximale autorisée MAXLEN\n"
@@ -306,6 +328,8 @@ char* make_Valid_Length(char chaine[])
                     "message.\n", MAXLEN);
             break;
         }
+        //printf("DEBUG make_Valid_Length() : loops = %d\n", loops);
+        ++loops;
     }
 
     return chaine;
@@ -314,3 +338,45 @@ char* make_Valid_Length(char chaine[])
 
 
                 
+
+char* numEnAscii(char targetArray[], int *targetLengthAddr, char num)
+{
+    static const char *words[10] = {
+        "ZERO", "ONE", "TWO", "THREE", "FOUR",
+        "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"
+    };
+
+    if ( targetLengthAddr == NULL )
+    {
+        return NULL;
+    }
+
+    if ( num < '0' || num > '9' )
+    {
+        return targetArray;
+    }
+
+    const char *w = words[num - '0'];
+    int word_len = strlen(w);
+    printf("DEBUG validation.c : numEnAscii() : word_len = %d\n", word_len);
+    int old_len = *targetLengthAddr;
+
+    char *tmp = realloc(targetArray, old_len + word_len + 1);
+
+    if ( tmp == NULL)
+    {
+        warn("Warning : numEnAscii() : réallocation échouée.\n");
+        return NULL;
+    }
+
+    targetArray = tmp;
+
+    memcpy(targetArray + old_len, w, word_len);
+    *targetLengthAddr = old_len + word_len; 
+    targetArray[*targetLengthAddr] = '\0';
+
+    return targetArray;
+}
+
+
+

@@ -8,6 +8,7 @@ int validation_Nom_Fichier(char* nomFichier);
 char* validationEntree(char* targetArray, int* targetLengthAddr, char* entree);
 int estInteger(char* entree);
 char* make_Valid_Length(char chaine[]);
+char* numEnAscii(char targetArray[], int *targetLengthAddr, char num);
 
 
 #endif

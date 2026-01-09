@@ -79,6 +79,12 @@ char * getFileName(char* inputFileName)
 
 		inputFileName = realloc(inputFileName, lengthFileName + 2);
 
+        if ( inputFileName == NULL )
+        {
+            warn(" getFileName() : réallocation échouée.\n");
+            return NULL;
+        }
+
 		inputFileName[lengthFileName] = c;
 	}
 
@@ -214,6 +220,15 @@ char * getFromUser(char targetArray[], int* targetLengthAddr)
 		 * 		break;
 		 * }
 		 */
+        if ( c >= '0' && c <= '9' )
+        {
+            targetArray = numEnAscii(targetArray, targetLengthAddr, c);
+            if ( targetArray == NULL )
+            {
+                return NULL;
+            }
+            continue;
+        }
 
 
 		if ( c == '\n' || c == '\0' )
@@ -234,6 +249,12 @@ char * getFromUser(char targetArray[], int* targetLengthAddr)
 		//	Réallocation de la mémoire, incrémentation par un
 		++(*targetLengthAddr);
 		targetArray = realloc(targetArray, *targetLengthAddr + 2);
+
+        if ( targetArray == NULL )
+        {
+            warn("getFromUser() : réallocation échouée.\n");
+            return NULL;
+        }
 
 		targetArray[loop] = c;
 	}
@@ -270,6 +291,12 @@ int saveToFile(char outputArray[])
 
     //  Vérifier que outputArray est de longueur valide, sinon le rendre valide
     outputArray = make_Valid_Length(outputArray);
+    if ( outputArray == NULL )
+    {
+        warn("Warning : saveToFile() : validation de la longueur de outputArray[]\n"
+                "échouée.\n");
+        return 1;
+    }
 	
 	//	nom du fichier
 	fileNameP = getFileName(fileNameP);
