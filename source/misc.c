@@ -120,7 +120,7 @@ void version(void) {
 	printf("    OOOOPPPPPPPPPPPPPPPPPPPPQQPPQQQQQ  PRQ               RRRRRS              \033[38;5;202mvigenere-tool\033[0m\n");
 	printf("    OOOOOPPPPPPPPPPPPPPPPPPPPQQQQQQQQ  NQP      PRRRRRRRRRL  QR             --------------------------------\n");
 	printf("    OOOOPPPPPPPPPPPPPPPPPPQI        PQQQM     QRQRP      RRRRRR              \033[34mAlgorithm:\033[0m Vigenere Cipher\n");
-	printf("    OOOOPPPPPPPPPPPPPPPPPPPQ               QQRQR  O                          \033[34mVersion:\033[0m 1.0.0\n");
+	printf("    OOOOPPPPPPPPPPPPPPPPPPPQ               QQRQR  O                          \033[34mVersion:\033[0m 2.0.0\n");
 	printf("    OOOOPPPPPPPPPPPPPPPPPPPPQQQQQQQQQQN NQQQQH  HOOPM         PRRSRQ         \033[34mPlatform:\033[0m Linux\n");
 	printf("    OOOOPPPPPPPPPPPPPPPO              QQQQQQK     MPPPPQQQQQRRRO  SR         \033[34mLanguage:\033[0m C\n");
 	printf("    OOOOPPPPPPPP   NPPP            QQQQQ  NRRQ                RRRRSS         \033[34mPublication date:\033[0m January 2025\n");
