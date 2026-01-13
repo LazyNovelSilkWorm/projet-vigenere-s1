@@ -259,7 +259,7 @@ char* operation_Dechiffrement_CLI(char* argv[])
 		//	Si erreur
 		if ( message == NULL )
 		{
-			warn("Erreur operation_Dechiffrement_CLI() : échec de lecture du fichier%s\n",
+			warn("Erreur operation_Dechiffrement_CLI() : échec de lecture du fichier %s\n",
 					fileName);
 			free(message);
 			free(clef);
@@ -444,7 +444,7 @@ char* operation_Chiffrement_CLI(char* argv[])
 		//	Si erreur
 		if ( messageVig == NULL )
 		{
-			warn("Erreur operation_Chiffrement_CLI() : échec de lecture du fichier%s\n",
+			warn("Erreur operation_Chiffrement_CLI() : échec de lecture du fichier %s\n",
 					fileName);
 			free(messageVig);
 			free(clef);
