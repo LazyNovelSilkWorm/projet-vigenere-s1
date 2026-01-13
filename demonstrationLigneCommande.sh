@@ -23,7 +23,7 @@ sleep 1.5
 printf "\n\n"
 
 echo "______________________________________________________________"
-echo "Chiffrer le message 'Hello World' avec la clé générée et le stocker dans un
+echo "Chiffrer le message \"The Answer to the Ultimate Question of Life, the Universe, and Everything is 42\" avec la clé générée et le stocker dans un
 fichier nommé Message-Chiffré_Demo.txt"
 printf "\n\n"
 echo "	$ ./Vigenere -ci \"The Answer to the Ultimate Question of Life, the Universe, and Everything is 42\" -K keyDemo.txt -o Message-Chiffré_Demo.txt"
