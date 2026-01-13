@@ -48,7 +48,7 @@ void printHelp(void){
 		"\t\tDéchiffrer le message avec la clé donnés en option.\n"
         "\n"
 		"\t-g <nombre_de_caractères>\n"
-		"\t\tGénèrer une clé de chiffrement de la longueur donnée.\n"
+		"\t\tGénérer une clé de chiffrement de la longueur donnée.\n"
         "\n"
 		"OPTIONS D'ENTRÉE (APPLIQUER À -c ET -d) :\n"
 		"\tCes options sont nécessaires après les actions -c et -d.\n"
@@ -97,10 +97,10 @@ void printHelp(void){
 		"\taperçu des capacités de ce projet.\n"
 		"\n"
 		"AUTEURS :\n"
-		"\t•Henry ROBERT <henry1.robert@epita.fr>\n"
-		"\t•Gabriel SICCARDI <gabriel.siccardi@epita.fr>\n"
-		"\t•Maeli COQUELLE <maelie.coquelle@epita.fr>\n"
-		"\t•Maxime WILT <maxime.wilt@epita.fr>\n";
+		"\t• Henry ROBERT       <henry1.robert@epita.fr>\n"
+		"\t• Gabriel SICCARDI   <gabriel.siccardi@epita.fr>\n"
+		"\t• Maeli COQUELLE     <maelie.coquelle@epita.fr>\n"
+		"\t• Maxime WILT        <maxime.wilt@epita.fr>\n";
 	printf("%s", tab);
 }
 
@@ -129,14 +129,14 @@ void version(void) {
 	printf("     NOOOPPPPPPPP GPPPPPPQP          QQQQQR     QRRR              SSSSRO      	     Maxime\n");
 	printf("       POPPPPPPPPPPPPPPPPPPQPQQQQQQQQQP  MQ       RRRRRRRRRRRRRRSRS   SS      	     Maelie\n");
 	printf("        GPPOPPPPPPPPPPPPPPQ          QQRQQQ                       SSSSRS     \033[34mUsage:\033[0m Encrypt / Decrypt\n");
-	printf("             MOOOOOOOOI     \033[38;5;202m__      ___                   __\033[0m\n");
-	printf("                		  \033[38;5;202m\\ \\    / (_)                  \\_\\ \033[0m         \033[34mvigenere -h for more information\033[0m\n");
-	printf(" 		   \033[38;5;202m\\ \\  / / _  __ _  ___ _ __   ___ _ __ ___\033[0m\n");
-	printf(" 		    \033[38;5;202m\\ \\/ / | |/ _` |/ _ \\ '_ \\ / _ \\ '__/ _ \\\033[0m\n");
-	printf(" 		     \033[38;5;202m\\  /  | | (_| |  __/ | | |  __/ | |  __/\033[0m\n");
-	printf(" 		      \033[38;5;202m\\/   |_|\\__, |\\___|_| |_|\\___|_|  \\___|\033[0m\n");
-	printf("      			               \033[38;5;202m__/ |               \033[34mENCRYPTED●\033[0m\n");
-	printf("    				      \033[38;5;202m|____/\033[0m\n");
+	printf("         MOOOOOOOOI \033[38;5;202m__     ___                   __\033[0m\n");
+	printf("   	    	  \033[38;5;202m\\ \\    / (_)                  \\_\\ \033[0m         \033[34mvigenere -h for more information\033[0m\n");
+	printf(" 	    	   \033[38;5;202m\\ \\  / / _  __ _  ___ _ __   ___ _ __ ___\033[0m\n");
+	printf(" 	    	    \033[38;5;202m\\ \\/ / | |/ _` |/ _ \\ '_ \\ / _ \\ '__/ _ \\\033[0m\n");
+	printf(" 	    	     \033[38;5;202m\\  /  | | (_| |  __/ | | |  __/ | |  __/\033[0m\n");
+	printf(" 	    	      \033[38;5;202m\\/   |_|\\__, |\\___|_| |_|\\___|_|  \\___|\033[0m\n");
+	printf("        			               \033[38;5;202m__/ |               \033[34mENCRYPTED●\033[0m\n");
+	printf("        				      \033[38;5;202m|____/\033[0m\n");
 
 
 
