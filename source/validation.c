@@ -115,7 +115,8 @@ char validation_Caractere(char c)
 /*	VALIDATION_NOM_FICHIER()
  *	
  *	Vérifie que le nom de fichier entré en paramètre est valide et a pour
- *	extension '.txt'.
+ *	extension '.txt'. Ce fichier doit être non-caché ( pas de '.' au début
+ *	du nom ), et s'écrire sous la forme 'nom-de-fichier.txt'.
  *
  *	PARAMETRE :
  *		nomFichier :
