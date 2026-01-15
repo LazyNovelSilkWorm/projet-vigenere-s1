@@ -77,7 +77,7 @@ char * getFileName(char* inputFileName)
 			return NULL;
 		}
 
-		inputFileName = realloc(inputFileName, lengthFileName + 2);
+		inputFileName = realloc(inputFileName, lengthFileName + 3);
 
         if ( inputFileName == NULL )
         {
