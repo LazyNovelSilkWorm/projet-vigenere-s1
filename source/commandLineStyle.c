@@ -146,8 +146,16 @@ int commandLineStyle(int argc, char* argv[])
 	{
 		char* fileName = argv[PARAMS[o]];
 
+        //  calcul longueur du nom de fichier
+        int fileNameLength = 0;
+        while (fileName[fileNameLength] != '\0' )
+        {
+            ++fileNameLength;
+        }
+
 		//	Validation du nom de fichier
-		estInvalide = validation_Nom_Fichier(fileName);
+		estInvalide = validation_Nom_Fichier(fileName, fileNameLength);
+
 		if ( estInvalide == 1 )
 		{
 			warn("Erreur : '%s' est un nom de fichier invalide. Pour rappel,\n"
@@ -219,17 +227,17 @@ char* operation_Dechiffrement_CLI(char* argv[])
 	//	Si le message est entré dans la ligne de commande
 	if ( FLAGS[i] == 1 )
 	{
-		message = validationEntree(message, &lenMessage, argv[ PARAMS[ i ] ]);
+		char* tmp = validationEntree(message, &lenMessage, argv[ PARAMS[ i ] ]);
 
-		if ( message == NULL )
+		if ( tmp == NULL )
 		{
 			warn("Erreur operation_Dechiffrement_CLI() : message vide ou invalide.\n");
-			free(message);
 			free(clef);
-			message = NULL;
 			clef = NULL;
 			return NULL;
 		}
+
+        message = tmp;
 	}
 	
 	//	Si le message est dans un fichier
@@ -238,7 +246,15 @@ char* operation_Dechiffrement_CLI(char* argv[])
 		lenMessage = 0;
 		fileName = argv[ PARAMS[ I ] ];
 
-		statut = validation_Nom_Fichier(fileName);
+        //  calcul longueur du nom de fichier
+        int fileNameLength = 0;
+        while ( fileName[fileNameLength] != '\0' )
+        {
+            ++fileNameLength;
+        }
+
+
+		statut = validation_Nom_Fichier(fileName, fileNameLength);
 
 		//	Si nom de fichier invalide
 		if ( statut == 1 )
@@ -254,10 +270,10 @@ char* operation_Dechiffrement_CLI(char* argv[])
 		}
 
 		//	Lecture du fichier
-		message = lireFichier(fileName, message, &lenMessage);
+		char* tmp = lireFichier(fileName, message, &lenMessage);
 
 		//	Si erreur
-		if ( message == NULL )
+		if ( tmp == NULL )
 		{
 			warn("Erreur operation_Dechiffrement_CLI() : échec de lecture du fichier %s\n",
 					fileName);
@@ -266,6 +282,7 @@ char* operation_Dechiffrement_CLI(char* argv[])
 			clef = NULL;
 			return NULL;
 		}
+        message = tmp;
 	}
 	else
 	{
@@ -285,13 +302,32 @@ char* operation_Dechiffrement_CLI(char* argv[])
 	if ( FLAGS[k] == 1 )
 	{
 		//	Si la clé est dans la ligne de commande
-		clef = validationEntree(clef, &lenClef, argv[ PARAMS[ k ] ]);
+		char* tmp = validationEntree(clef, &lenClef, argv[ PARAMS[ k ] ]);
+
+        if ( tmp == NULL )
+        {
+            warn("Erreur operation_Chiffrement() : La clé entrée est vide ou invalide.\n");
+            free(clef);
+            free(message);
+            clef = NULL;
+            message = NULL;
+            return NULL;
+        }
+
+        clef = tmp;
 	}
 	else if ( FLAGS[K] == 1 )
 	{
 		fileName = argv[ PARAMS[ K ] ];
 
-		statut = validation_Nom_Fichier(fileName);
+        //  calcul longueur de fileName
+        int fileNameLength = 0;
+        while (fileName[fileNameLength] != '\0' )
+        {
+            ++fileNameLength;
+        }
+
+		statut = validation_Nom_Fichier(fileName, fileNameLength);
 
 		//	Si nom de fichier invalide
 		if ( statut == 1 )
@@ -307,9 +343,9 @@ char* operation_Dechiffrement_CLI(char* argv[])
 		}
 
 		
-		clef = lireFichier(fileName, clef, &lenClef);
+		char* tmp = lireFichier(fileName, clef, &lenClef);
 
-		if ( clef == NULL )
+		if ( tmp == NULL )
 		{
 			warn("Erreur operation_Dechiffrement_CLI() : lecture du fichier %s échouée.\n",
 					fileName);
@@ -318,6 +354,7 @@ char* operation_Dechiffrement_CLI(char* argv[])
 			message = NULL;
 			return NULL;
 		}
+        clef = tmp;
 	}
 	else
 	{
@@ -333,7 +370,7 @@ char* operation_Dechiffrement_CLI(char* argv[])
 
 
 	//	==== DECHIFFREMENT ====
-	char * output = (char *)malloc(sizeof(char) * lenMessage);
+	char * output = (char *)malloc(sizeof(char) * (lenMessage + 1));
 
 	if ( output == NULL )
 	{
@@ -404,17 +441,17 @@ char* operation_Chiffrement_CLI(char* argv[])
 	//	Si le messageVig est entré dans la ligne de commande
 	if ( FLAGS[i] == 1 )
 	{
-		messageVig = validationEntree(messageVig, &lenMessageVig, argv[ PARAMS[ i ] ]);
+		char* tmp = validationEntree(messageVig, &lenMessageVig, argv[ PARAMS[ i ] ]);
 
 		if ( messageVig == NULL )
 		{
 			warn("Erreur operation_Chiffrement_CLI() : messageVig vide ou invalide.\n");
-			free(messageVig);
 			free(clef);
-			messageVig = NULL;
 			clef = NULL;
 			return NULL;
 		}
+
+        messageVig = tmp;
 	}
 	
 	//	Si le messageVig est dans un fichier
@@ -423,7 +460,14 @@ char* operation_Chiffrement_CLI(char* argv[])
 		lenMessageVig = 0;
 		fileName = argv[ PARAMS[ I ] ];
 
-		statut = validation_Nom_Fichier(fileName);
+        //  calcul de la longueur de fileName
+        int fileNameLength = 0;
+        while (fileName[fileNameLength] != '\0')
+        {
+            ++fileNameLength;
+        }
+
+		statut = validation_Nom_Fichier(fileName, fileNameLength);
 
 		//	Si nom de fichier invalide
 		if ( statut == 1 )
@@ -439,10 +483,10 @@ char* operation_Chiffrement_CLI(char* argv[])
 		}
 
 		//	Lecture du fichier
-		messageVig = lireFichier(fileName, messageVig, &lenMessageVig);
+		char* tmp = lireFichier(fileName, messageVig, &lenMessageVig);
 
 		//	Si erreur
-		if ( messageVig == NULL )
+		if ( tmp == NULL )
 		{
 			warn("Erreur operation_Chiffrement_CLI() : échec de lecture du fichier %s\n",
 					fileName);
@@ -451,6 +495,7 @@ char* operation_Chiffrement_CLI(char* argv[])
 			clef = NULL;
 			return NULL;
 		}
+        messageVig = tmp;
 	}
 	else
 	{
@@ -470,13 +515,29 @@ char* operation_Chiffrement_CLI(char* argv[])
 	if ( FLAGS[k] == 1 )
 	{
 		//	Si la clé est dans la ligne de commande
-		clef = validationEntree(clef, &lenClef, argv[ PARAMS[ k ] ]);
+		char* tmp = validationEntree(clef, &lenClef, argv[ PARAMS[ k ] ]);
+
+        if ( tmp == NULL )
+        {
+            warn("Erreur operation_Chiffrement() : La clé entrée est invalide.\n");
+            free(messageVig);
+            messageVig = NULL;
+            return NULL;
+        }
+
+        clef = tmp;
 	}
 	else if ( FLAGS[K] == 1 )
 	{
 		fileName = argv[ PARAMS[ K ] ];
 
-		statut = validation_Nom_Fichier(fileName);
+        int fileNameLength = 0;
+        while (fileName[fileNameLength] != '\0' )
+        {
+            ++fileNameLength;
+        }
+
+		statut = validation_Nom_Fichier(fileName, fileNameLength);
 
 		//	Si nom de fichier invalide
 		if ( statut == 1 )
@@ -492,9 +553,9 @@ char* operation_Chiffrement_CLI(char* argv[])
 		}
 
 		
-		clef = lireFichier(fileName, clef, &lenClef);
+		char* tmp = lireFichier(fileName, clef, &lenClef);
 
-		if ( clef == NULL )
+		if ( tmp == NULL )
 		{
 			warn("Erreur operation_Chiffrement_CLI() : lecture du fichier %s échouée.\n",
 					fileName);
@@ -503,6 +564,8 @@ char* operation_Chiffrement_CLI(char* argv[])
 			messageVig = NULL;
 			return NULL;
 		}
+
+        clef = tmp;
 	}
 	else
 	{
@@ -518,14 +581,14 @@ char* operation_Chiffrement_CLI(char* argv[])
 
 
 	//	==== CHIFFREMENT ====
-	char * output = (char *)malloc(sizeof(char) * lenMessageVig);
+	char * output = (char *)malloc(sizeof(char) * (lenMessageVig + 1));
 
 	if ( output == NULL )
 	{
 		free(output);
 		free(messageVig);
-		messageVig = NULL;
 		free(clef);
+		messageVig = NULL;
 		clef = NULL;
 		return NULL;
 	}

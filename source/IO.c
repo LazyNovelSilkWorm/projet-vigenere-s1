@@ -27,7 +27,7 @@
 
 
 
-char * getFileName(char* inputFileName);
+char * getFileName(char* inputFileName);//, int* lengthFileName);
 char * getFromFile(char targetArray[], int* targetLengthAddr);
 char * getFromUser(char targetArray[], int* targetLengthAddr);
 int saveToFile(char outputArray[]);
@@ -41,13 +41,14 @@ int saveToFile(char outputArray[]);
  *	PARAMETRE :
  *	    - char inputFileName[] :
  *	        Nom du fichier à recevoir de l'utilisateur
+ *
  *	RETOURNE :
  *		- char inputFileName[] :
  *			Nom du fichier 
  *		- NULL
  *			Échec
  */
-char * getFileName(char* inputFileName)
+char * getFileName(char* inputFileName)//, int* lengthFileName)
 {
 	int lengthFileName;
 	//char * inputFileName = (char *)malloc(sizeof(char));
@@ -74,27 +75,39 @@ char * getFileName(char* inputFileName)
 			fprintf(stderr, "usage : Ce programme ne prend pas de fichier en dehors du"
 					"répertoire courant.\n");
 			//exit(EXIT_FAILURE);
+            free(inputFileName);
+            inputFileName = NULL;
 			return NULL;
 		}
 
-		inputFileName = realloc(inputFileName, lengthFileName + 3);
+        //  permet de libérer inputFileName si realloc échoue.
+        char* tmp = realloc(inputFileName, lengthFileName + 2);
 
-        if ( inputFileName == NULL )
+        //  si réallocation échoue
+        if ( tmp == NULL )
         {
             warn(" getFileName() : réallocation échouée.\n");
+            free(inputFileName);
+            inputFileName = NULL;
             return NULL;
         }
+
+        // Si réallocation réussit
+        inputFileName = tmp;
 
 		inputFileName[lengthFileName] = c;
 	}
 
-	inputFileName[lengthFileName + 1] = '\0';
+    //++lengthFileName;
+	inputFileName[lengthFileName] = '\0';
 
 	//	validation
-	if ( validation_Nom_Fichier(inputFileName) == -1 )
+	if ( validation_Nom_Fichier(inputFileName, lengthFileName) == -1 )
 	{
 		fprintf(stderr, "usage : nom de fichier entré invalide.\n");
 		//exit(EXIT_FAILURE);
+        free(inputFileName);
+        inputFileName = NULL;
 		return NULL;
 	}
 
@@ -208,6 +221,7 @@ char * getFromUser(char targetArray[], int* targetLengthAddr)
 	int loop;
 	char c;
 
+    printf("DEBUG\n");
 	for ( loop = 0 ; *targetLengthAddr <= MAXLEN ; ++loop )
 	{
 		c = getchar();
@@ -248,18 +262,23 @@ char * getFromUser(char targetArray[], int* targetLengthAddr)
 
 		//	Réallocation de la mémoire, incrémentation par un
 		++(*targetLengthAddr);
-		targetArray = realloc(targetArray, *targetLengthAddr + 2);
 
-        if ( targetArray == NULL )
+		char* tmp = realloc(targetArray, *targetLengthAddr + 2);
+
+        if ( tmp == NULL )
         {
             warn("getFromUser() : réallocation échouée.\n");
+            free(targetArray);
+            targetArray = NULL;
             return NULL;
         }
+        //  Réallocation réussie :
+        targetArray = tmp;
 
 		targetArray[loop] = c;
 	}
 
-	targetArray[*targetLengthAddr + 1] = '\0';
+	targetArray[*targetLengthAddr] = '\0';
 
 	return targetArray;
 }
@@ -289,25 +308,34 @@ int saveToFile(char outputArray[])
 	char* fileNameP = (char*)malloc(sizeof(char));
 	int status;
 
+    if ( fileNameP == NULL )
+    {
+        warn("Warning : saveToFile() : allocation mémoire fileNameP échouée.\n");
+        return 1;
+    }
+
     //  Vérifier que outputArray est de longueur valide, sinon le rendre valide
     outputArray = make_Valid_Length(outputArray);
     if ( outputArray == NULL )
     {
         warn("Warning : saveToFile() : validation de la longueur de outputArray[]\n"
                 "échouée.\n");
+        free(fileNameP);
+        fileNameP = NULL;
         return 1;
     }
 	
 	//	nom du fichier
-	fileNameP = getFileName(fileNameP);
+	char* tmp = getFileName(fileNameP);
 
-	if ( fileNameP == NULL )
+	if ( tmp == NULL )
 	{
 		warn("Erreur : entrée du nom de fichier échouée.\n");
-		free(fileNameP);
-		fileNameP = NULL;
+		//free(fileNameP);
+		//fileNameP = NULL;
 		return 1;
 	}
+    fileNameP = tmp;
 
 	//	écriture dans le fichier
 	status = ecrireDansFichier(fileNameP, outputArray);

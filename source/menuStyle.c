@@ -54,6 +54,8 @@ int menuStyle(void)
 			"|	- d : déchiffrer un message\n"
 			"|	- g : générer une clé\n"
 			"|	- h : afficher le menu d'aide\n"
+            "|  - v : afficher la version\n"
+            "| Entrer une option [c, d, g, h, v] :\n"
 			"| > ");
 
     // ==== OPERATION ====
@@ -108,6 +110,7 @@ int menuStyle(void)
 			"|	(Y/n) :\n"
 			"| > ");
 	operation = getchar();
+
 	if ( operation != '\n' )
 	{
 		getchar();
@@ -160,22 +163,24 @@ char * operation_Chiffrement_Menu(void)
 	//  Vérifie allocations
 	if ( inputArray == NULL )
 	{
+		warn("operation_Chiffrement_Menu() : inputArray allocation échouée.\n");
 		free(inputArray);
 		free(keyArray);
 		inputArray = NULL;
 		keyArray = NULL;
-		warn("operation_Chiffrement_Menu() : inputArray allocation échouée.\n");
 		return NULL;
 	}
 	if ( keyArray == NULL )
 	{
+		warn("operation_Chiffrement_Menu() : keyArray allocation échouée.\n");
 		free(inputArray);
 		free(keyArray);
 		inputArray = NULL;
 		keyArray = NULL;
-		warn("operation_Chiffrement_Menu() : keyArray allocation échouée.\n");
 		return NULL;
 	}
+    inputArray[0] = '\0';
+    keyArray[0] = '\0';
 
 	inputLength = 0;
 	keyLength = 0;
@@ -201,10 +206,10 @@ char * operation_Chiffrement_Menu(void)
 				"| > ");
 
 		//	Extraire message du fichier
-		inputArray = getFromFile(inputArray, &inputLength);
+		char* tmp = getFromFile(inputArray, &inputLength);
 
 		//	Vérification succès
-		if ( inputArray == NULL )
+		if ( tmp == NULL )
 		{
 			warn("Warning : operation_Chiffrement_Menu() : lecture de fichier échouée.\n");
 			free(inputArray);
@@ -212,6 +217,8 @@ char * operation_Chiffrement_Menu(void)
 			keyArray = NULL;
 			return NULL;
 		}
+
+        inputArray = tmp;
 	}
 	else if ( c == 'n' || c == 'N' )
 	{
@@ -229,14 +236,14 @@ char * operation_Chiffrement_Menu(void)
 	//	Si message vide
 	if ( inputArray[0] == '\0' || inputArray == NULL )
 	{
-		free(inputArray);
-		free(keyArray);
-		inputArray = NULL;
-		keyArray = NULL;
 		fprintf(stderr, "operation_Chiffrement_Menu() : message vide, vérifier la\n"
                 " validité de l'entrée.\n"
 				"	message = %s\n"
 				"	longueur message = %d\n", inputArray, inputLength);
+		free(inputArray);
+		free(keyArray);
+		inputArray = NULL;
+		keyArray = NULL;
 		return NULL;
 	}
 
@@ -258,10 +265,10 @@ char * operation_Chiffrement_Menu(void)
 		printf("|	Entrez le nom du fichier :\n"
 				"| > ");
 
-		keyArray = getFromFile(keyArray, &keyLength);
+		char* tmp = getFromFile(keyArray, &keyLength);
 
 		//	Vérification échec
-		if ( keyArray == NULL )
+		if ( tmp == NULL )
 		{
 			warn("Warning : operation_Chiffrement_Menu() : lecture de fichier échouée.\n");
 			free(inputArray);
@@ -269,6 +276,8 @@ char * operation_Chiffrement_Menu(void)
 			keyArray = NULL;
 			return NULL;
 		}
+
+        keyArray = tmp;
 	}
 	else if ( c == 'n' || c == 'N' )
 	{
@@ -302,13 +311,13 @@ char * operation_Chiffrement_Menu(void)
 	//	Vérification de l'allocation
 	if ( output == NULL )
 	{
+		warn("operation_Chiffrement_Menu() : allocation de mémoire de sortie échouée.\n");
 		free(inputArray);
 		free(keyArray);
 		free(output);
 		inputArray = NULL;
 		keyArray = NULL;
 		output = NULL;
-		warn("operation_Chiffrement_Menu() : allocation de mémoire de sortie échouée.\n");
 		return NULL;
 	}
 
@@ -350,22 +359,24 @@ char * operation_Dechiffrement_Menu(void)
 	//	Vérifie allocations
 	if ( inputArray == NULL )
 	{
+		warn("operation_Dechiffrement_Menu() : inputArray allocation échouée.\n");
 		free(inputArray);
 		free(keyArray);
 		inputArray = NULL;
 		keyArray = NULL;
-		warn("operation_Dechiffrement_Menu() : inputArray allocation échouée.\n");
 		return NULL;
 	}
 	if ( keyArray == NULL )
 	{
+		warn("operation_Dechiffrement_Menu() : keyArray allocation échouée.\n");
 		free(inputArray);
 		free(keyArray);
 		inputArray = NULL;
 		keyArray = NULL;
-		warn("operation_Dechiffrement_Menu() : keyArray allocation échouée.\n");
 		return NULL;
 	}
+    inputArray[0] = '\0';
+    keyArray[0] = '\0';
 
 	inputLength = 0;
 	keyLength = 0;
@@ -391,7 +402,7 @@ char * operation_Dechiffrement_Menu(void)
 				"| > ");
 		
 		//	Extraire message du fichier
-		inputArray = getFromFile(inputArray, &inputLength);
+		char* tmp = getFromFile(inputArray, &inputLength);
 		//	Vérification succès
 		if ( inputArray == NULL )
 		{
@@ -401,6 +412,8 @@ char * operation_Dechiffrement_Menu(void)
 			keyArray = NULL;
 			return NULL;
 		}
+
+        inputArray = tmp;
 	}
 	else if ( c == 'n' || c == 'N' )
 	{
@@ -449,7 +462,7 @@ char * operation_Dechiffrement_Menu(void)
 				"| > ");
 
 		//	Extraire la clé du fichier
-		keyArray = getFromFile(keyArray, &keyLength);
+		char* tmp = getFromFile(keyArray, &keyLength);
 
 		//	Vérification succès
 		if ( keyArray == NULL )
@@ -460,6 +473,8 @@ char * operation_Dechiffrement_Menu(void)
 			keyArray = NULL;
 			return NULL;
 		}
+
+        keyArray = tmp;
 	}
 	else if ( c == 'n' || c == 'N' )
 	{
@@ -477,14 +492,14 @@ char * operation_Dechiffrement_Menu(void)
 	//	ERREUR si clé vide
 	if ( keyArray[0] == '\0' || keyArray == NULL )
 	{
-		free(inputArray);
-		free(keyArray);
-		inputArray = NULL;
-		keyArray = NULL;
 		fprintf(stderr, "operation_Dechiffrement_Menu() : entrer une clé en caractères\n"
                 " alphabétiques\n"
 				"	clé = %s\n"
 				"	longueur clé = %d\n", keyArray, keyLength);
+		free(inputArray);
+		free(keyArray);
+		inputArray = NULL;
+		keyArray = NULL;
 		return NULL;
 	}
 
@@ -494,15 +509,16 @@ char * operation_Dechiffrement_Menu(void)
 	//	Vérification de l'allocation
 	if ( output == NULL )
 	{
+		warn("operation_Dechiffrement_Menu() : output allocation échouée.\n");
 		free(inputArray);
 		free(keyArray);
 		free(output);
 		inputArray = NULL;
 		keyArray = NULL;
 		output = NULL;
-		warn("operation_Dechiffrement_Menu() : output allocation échouée.\n");
 		return NULL;
 	}
+
 
 	//	Déchiffrement du message
 	for ( loop = 0 ; loop < inputLength && inputArray[loop] != '\0' ; ++loop )
@@ -559,6 +575,8 @@ char * operation_generer(void)
 	if ( output == NULL )
 	{
 		warn("Erreur : génération de la clé échouée.\n");
+        free(output);
+        output = NULL;
         return NULL;
 	}
 

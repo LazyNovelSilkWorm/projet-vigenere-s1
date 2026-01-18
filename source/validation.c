@@ -119,22 +119,24 @@ char validation_Caractere(char c)
  *	du nom ), et s'écrire sous la forme 'nom-de-fichier.txt'.
  *
  *	PARAMETRE :
- *		nomFichier :
+ *		- char* nomFichier :
  *			Nom du fichier
+ *	    - int lengthNomFichier :
+ *	        Longueur du nom de fichier
  *	
  *	RETOURNE :
  *		- 0 :
  *			Le nom est valide
- *		- -1 :
+ *		- 1 :
  *			Le nom est invalide
  */
-int validation_Nom_Fichier(char* nomFichier)
+int validation_Nom_Fichier(char* nomFichier, int lengthNomFichier)
 {
 	int loop;
 	char * extension = ".txt";
 	char * p;
 
-	for ( loop = 0 ; nomFichier[loop] != '\0' ; ++loop )
+    for ( loop = 0 ; loop <= lengthNomFichier - 4 ; ++loop )
 	{
 		p = &nomFichier[loop];
 
@@ -145,14 +147,24 @@ int validation_Nom_Fichier(char* nomFichier)
 		}
 
 		//	finit par l'extension '/txt'
-		if ( strcmp(p, extension) == 0 && loop > 0 )
-		{
-			return 0;
-		}
+	    //if ( strcmp(p, extension) == 0 && loop > 0 )
+	    //{
+	    //	return 0;
+	    //}
+        if ( loop == 0 )
+        {
+            continue;
+        }
+        if ( strcmp(p, extension) == 0 )
+        {
+            return 0;
+        }
+
 	}
 	
-	fprintf(stderr, "valdation_Nom_Fichier usage : %s n'est pas un nom de fichier valide.\n", nomFichier);
-	return -1;
+	fprintf(stderr, "validation_Nom_Fichier usage : %s n'est pas un nom"
+           " de fichier valide. Vérifiez qu'il a bien l'extension '.txt'.\n", nomFichier);
+	return 1;
 }
 
 
@@ -192,13 +204,17 @@ char* validationEntree(char* targetArray, int* targetLengthAddr, char* entree)
 
 		if ( validation_Caractere(*position) != '\0' )
 		{
-			targetArray = realloc(targetArray, *targetLengthAddr + 2);
+			char* tmp = realloc(targetArray, *targetLengthAddr + 2);
 
-            if ( targetArray == NULL )
+            if ( tmp == NULL )
             {
                 warn("validationEntree() : réallocation échouée.\n");
+                free(targetArray);
+                targetArray = NULL;
                 return NULL;
             }
+
+            targetArray = tmp;
 
 			targetArray[*targetLengthAddr] = validation_Caractere(*position);
 			++(*targetLengthAddr);
@@ -209,11 +225,14 @@ char* validationEntree(char* targetArray, int* targetLengthAddr, char* entree)
 	targetArray[*targetLengthAddr] = '\0';
 
 	//	vérifier que l'entrée valide n'est pas vide.
-	if ( targetArray[0] == '\0' )
+	if ( targetArray[0] == '\0' || *targetLengthAddr == 0 )
 	{
-		warn("Erreur validationEntree() : Message vide ou invalide.\n");
+		warn("Erreur validationEntree() : Entrée vide ou invalide.\n");
+        free(targetArray);
+        targetArray = NULL;
 		return NULL;
 	}
+
 
 	//	si l'entrée est trop grande
 	if ( *position != '\0' )
@@ -315,13 +334,16 @@ char* make_Valid_Length(char chaine[])
         //  Si chaine[] est trop longue
         if ( loops > MAXLEN )
         {
-            chaine = realloc(chaine, MAXLEN);
+            char* tmp = realloc(chaine, MAXLEN);
 
-            if ( chaine == NULL )
+            if ( tmp == NULL )
             {
                 warn("make_Valid_Length() : réallocation échouée.\n");
                 return NULL;
             }
+
+            chaine = tmp;
+
             //  nouvelle fin de chaine de caractères
             chaine[MAXLEN] = '\0';
             warn("Warning : Le résultat dépasse la taille maximale autorisée MAXLEN\n"
@@ -372,6 +394,8 @@ char* numEnAscii(char targetArray[], int *targetLengthAddr, char num)
 
     if ( targetLengthAddr == NULL )
     {
+        free(targetArray);
+        targetArray = NULL;
         return NULL;
     }
 
@@ -391,6 +415,8 @@ char* numEnAscii(char targetArray[], int *targetLengthAddr, char num)
     if ( tmp == NULL)
     {
         warn("Warning : numEnAscii() : réallocation échouée.\n");
+        free(targetArray);
+        targetArray = NULL;
         return NULL;
     }
 

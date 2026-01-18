@@ -60,6 +60,15 @@ char* lireFichier(const char* nomFichier, char* contenuFichier, int* lenContenuA
     long size = ftell(f);
     rewind(f);
 
+    //  si le fichier est vide
+    if ( size == 0 )
+    {
+        warn("Erreur : le fichier %s est vide.\n", nomFichier);
+        fclose(f);
+        f = NULL;
+        return NULL;
+    }
+
     char* buffer = malloc(sizeof(char) *(size + 1));
     if (!buffer)
     {
@@ -98,11 +107,15 @@ char* lireFichier(const char* nomFichier, char* contenuFichier, int* lenContenuA
 		{
 			contenuFichier[*lenContenuAddr] = c;
 			++(*lenContenuAddr);
-			contenuFichier = realloc(contenuFichier, *lenContenuAddr + 2);
-            if ( contenuFichier == NULL )
+
+			char* tmp = realloc(contenuFichier, *lenContenuAddr + 2);
+
+            if ( tmp == NULL )
             {
                 return NULL;
             }
+
+            contenuFichier = tmp;
 		}
 
 		if ( *lenContenuAddr >= MAXLEN )
@@ -113,7 +126,7 @@ char* lireFichier(const char* nomFichier, char* contenuFichier, int* lenContenuA
 			break;
 		}
     }
-    contenuFichier[*lenContenuAddr + 1] = '\0';
+    contenuFichier[*lenContenuAddr] = '\0';
 
 	
     //  Libération du buffer
