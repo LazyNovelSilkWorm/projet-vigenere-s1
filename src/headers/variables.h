@@ -18,8 +18,8 @@
 
 // MODIFIABLE
 //  Ici sont définies les variables pour les limites de taille. À modifier ici.
-#define MAXLEN 1024     //  Longueur de message maximale
-#define MAXLENKEY 80    //  Longueur de clé maximale
+#define MAXLEN      1024    //  Longueur de message maximale
+//#define MAXLENKEY   1024    //  Longueur de clé maximale
 
 //  NE PAS MODIFIER
 //	Variables utilisées pour accéder à FLAGS et PARAMS

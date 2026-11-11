@@ -42,7 +42,6 @@ int main(int argc, char** argv)
     //  Mode menu / intéraction utilisateur
 	else
 	{
-		printf("Version Menu\n\n");
 		status = menuStyle();
 		
 	}

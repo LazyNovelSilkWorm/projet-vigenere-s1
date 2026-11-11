@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "headers/variables.h"
 
@@ -103,7 +104,7 @@ char* genererClef(int length)
 
 	i = 0;
 	//	Vérifier que la longueur demandée est valide
-	if (length <= 0 || length > MAXLENKEY)
+	if (length <= 0 || length > MAXLEN)
 	{
 		return NULL;
 	}
@@ -115,6 +116,7 @@ char* genererClef(int length)
 		free(key);
 		return NULL;
 	}
+    srand(time(NULL));
 
 	//	Remplir la clé avec des lettres majuscules aléatoires
 	for (i = 0 ; i < length ; i++)

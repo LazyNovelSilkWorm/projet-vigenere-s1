@@ -305,6 +305,8 @@ char * operation_Chiffrement_Menu(void)
 		return NULL;
 	}
 
+    //  ==== OUTPUT ====
+
 	//	Allocation de mémoire pour l'output, de même longueur que le message
 	char * output = (char *)malloc(sizeof(char) * inputLength + 1);
 
@@ -552,13 +554,12 @@ char * operation_generer(void)
 	int keyLength;
 	char *output;
 
-	srand(time(NULL));
 
 	printf("|___________________________________________________________________\n"
 			"| GENERATION DE CLE :\n"
 			"|	Entrez la longueur de la clé que vous voulez générer. Cette valeur\n"
 			"| doit être un entier strictement supérieur à 0 et inférieur à %d.\n"
-			"| > ", MAXLENKEY);
+			"| > ", MAXLEN);
 
     //  Demande un integer et vérifie sa validité
 	keyLength = validation_Integer();

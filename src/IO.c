@@ -221,7 +221,6 @@ char * getFromUser(char targetArray[], int* targetLengthAddr)
 	int loop;
 	char c;
 
-    printf("DEBUG\n");
 	for ( loop = 0 ; *targetLengthAddr <= MAXLEN ; ++loop )
 	{
 		c = getchar();

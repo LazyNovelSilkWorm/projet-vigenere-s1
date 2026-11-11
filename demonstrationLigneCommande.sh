@@ -6,25 +6,25 @@ echo "Ceci est une démonstration présentant la fonctionnalité 'ligne de comma
 ou 'CLI' du projet."
 
 printf "\n\n"
+sleep 2.5
 
 echo "______________________________________________________________"
-echo "Générer une clé de longueur 42 dans un fichier nommé keyDemo.txt :"
+echo "Générer une clé de longueur 42"
 printf "\n\n"
 
 echo "	$ ./Vigenere -g 42 -o keyDemo.txt"
 ./Vigenere -g 42 -o keyDemo.txt
 
 printf "\n\n"
-echo "cat keyDemo.txt : "
+echo "$ cat keyDemo.txt"
 cat keyDemo.txt
 
-sleep 1.5
+sleep 3.5
 
 printf "\n\n"
 
 echo "______________________________________________________________"
-echo "Chiffrer le message \"The Answer to the Ultimate Question of Life, the Universe, and Everything is 42\" avec la clé générée et le stocker dans un
-fichier nommé Message-Chiffré_Demo.txt"
+echo "Message \"The Answer to the Ultimate Question of Life, the Universe, and Everything is 42\""
 printf "\n\n"
 echo "	$ ./Vigenere -ci \"The Answer to the Ultimate Question of Life, the Universe, and Everything is 42\" -K keyDemo.txt -o Message-Chiffré_Demo.txt"
 
@@ -37,8 +37,9 @@ cat Message-Chiffré_Demo.txt
 
 printf "\n\n"
 
-sleep 1.5
+sleep 3.5
 
+echo"\n"
 echo "______________________________________________________________"
 echo "Déchiffrer le message chiffré précédemment avec la même clé sans le stocker :"
 printf "\n\n"

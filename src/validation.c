@@ -56,6 +56,9 @@ int validation_Integer(void)
 		//	sinon erreur
 		else
 		{
+            warn("Vigenere : validation_Integer() : l'entrée est "
+                    "invalide. Vérifier que la taille est un entier "
+                    "strictement positif.\n");
 			input = -1;
 			return input;
 		}
@@ -63,8 +66,12 @@ int validation_Integer(void)
 	}
 
 	//	Vérifier que input est dans l'intervalle 0 < input <= MAXLEN
-	if (input > MAXLENKEY || input < 1 )
+	if (input > MAXLEN || input < 1 )
 	{
+        warn("Vigenere : validation_Integer() : l'entrée est "
+                "invalide. Vérifier que la taille est un entier "
+                "strictement positif inférieur à MAXLEN (=%d).\n",
+                MAXLEN);
 		input = -1;
 	}
 
@@ -132,7 +139,7 @@ char validation_Caractere(char c)
  */
 int validation_Nom_Fichier(char* nomFichier, int lengthNomFichier)
 {
-	int loop;
+	int loop, charInvalid = 0;
 	char * extension = ".txt";
 	char * p;
 
@@ -141,12 +148,13 @@ int validation_Nom_Fichier(char* nomFichier, int lengthNomFichier)
 		p = &nomFichier[loop];
 
 		//	contient un caractère non-valide
-		if ( p[0] == ' ' || p[0] == '\n' || p[0] == '\t' )
+		if ( p[0] == ' ' || p[0] == '\n' || p[0] == '\t' || p[0] == '/' )
 		{
+            charInvalid = 1;
 			break;
 		}
 
-		//	finit par l'extension '/txt'
+		//	finit par l'extension '.txt'
 	    //if ( strcmp(p, extension) == 0 && loop > 0 )
 	    //{
 	    //	return 0;
@@ -161,9 +169,19 @@ int validation_Nom_Fichier(char* nomFichier, int lengthNomFichier)
         }
 
 	}
-	
-	fprintf(stderr, "validation_Nom_Fichier usage : %s n'est pas un nom"
-           " de fichier valide. Vérifiez qu'il a bien l'extension '.txt'.\n", nomFichier);
+
+    if ( charInvalid == 1 )
+    {
+        fprintf(stderr, "validation_Nom_Fichier usage : %s n'est pas un nom "
+                "de fichier valide. Vérifier qu'il se trouve bien dans le répertoire "
+                "courant.\n", nomFichier);
+    }
+    else
+    {
+        fprintf(stderr, "validation_Nom_Fichier usage : %s n'est pas un nom"
+               " de fichier valide. Vérifiez qu'il a bien l'extension '.txt'.\n",
+               nomFichier);
+    }
 	return 1;
 }
 
@@ -249,7 +267,7 @@ char* validationEntree(char* targetArray, int* targetLengthAddr, char* entree)
 
 /*	ESTINTEGER()
  *
- *	Vérifie qu'une chaine de charactères est bien un nombre entier positif
+ *	Vérifie qu'une chaine de charactères représente bien un nombre entier positif
  *	inférieur à MAXLEN.
  *
  *	PARAMETRE :
@@ -264,13 +282,15 @@ char* validationEntree(char* targetArray, int* targetLengthAddr, char* entree)
  */
 int estInteger(char* entree)
 {
-	int loop, longueur = 0;
+	int longueur = 0;
+    //int loop;
 	char* position;
 	char digit;
 
-	position = entree;
-
-	for ( loop = 0 ; *position != '\0' ; ++loop)
+	//position = entree;
+    // trying to replace loop by position
+	//for (int loop = 0 ; *position != '\0' ; ++loop)
+	for ( position = entree ;  *position != '\0' ; ++position)
 	{
 		digit = *position;
 
@@ -282,20 +302,27 @@ int estInteger(char* entree)
 		else
 		{
 			warn("Erreur estInteger() usage : entrer un nombre entier pour générer\n"
-					"une clé.\n");
+					"une clé.\n");// (caractère %d)\n", position - entree);
 			return 0;
 		}
 		
 		//	vérifier que la longueur est autorisée
 		if ( longueur > MAXLEN )
 		{
-			warn("Erreur estInteger() usage : longueur de clé (= %d) à générer\n"
+			warn("Erreur estInteger() usage : longueur de clé %d à générer\n"
 				   "supérieure à MAXLEN (= %d).\n", longueur, MAXLEN);
 			return -1;
 		}
 
-		++position;
+		//++position;
 	}
+
+    if ( longueur == 0 )
+    {
+        warn("Erreur estInteger() usage : la longueur de la clé doit être "
+                "strictement supérieure à zéro.\n");
+        return -1;
+    }
 
 	return longueur;
 }

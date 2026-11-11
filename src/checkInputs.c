@@ -364,7 +364,9 @@ int checkFlags(char argvV[])
 		}
 		else
 		{
-			fprintf(stderr, "checkFlags() : ERROR : option %c invalide\n", argvV[f]);
+			fprintf(stderr, "checkFlags() : ERROR : option %c invalide. "
+                    "Vérifier l'arrangement des options.", argvV[f]);
+            return 1;
 		}
 	}
 	LASTOPT = argvV[f - 1];

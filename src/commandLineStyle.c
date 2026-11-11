@@ -131,7 +131,7 @@ int commandLineStyle(int argc, char* argv[])
     }
 	else
 	{
-		printf("commandLineStyle() : cette option n'existe pas.\n");
+		printf("commandLineStyle() : opérateur manquant ou invalide.\n");
 		return 1;
 	}
 
