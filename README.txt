@@ -7,8 +7,7 @@
 
 PRINCIPES FONDAMENTAUX :
 ------------------------
-    Dans le développement de cet outil, plusieurs principes ont été choisis. Ceux-ci ont
-déterminé la direction du projet.
+Dans le développement de cet outil, plusieurs principes ont été choisis. Ceux-ci ont déterminé la direction du projet.
 
     1. La ponctuation, espaces et accents ne sont pas gérés par l'outil. Seuls les
         caractères strictement alphanumériques sont chiffrés. Tous les autres seront
@@ -43,7 +42,7 @@ déterminé la direction du projet.
 
 
 
-I| TUI : TERMINAL USER INTERFACE :
+1| TUI : TERMINAL USER INTERFACE :
 -------------------------------
     Le mode TUI est la fonctionalité basique du projet. L'utilisateur lance l'application
 ou l'exécutable 'Vigenere'. Cela lui présente le choix d'opérateur. Est-ce que l'objectif
@@ -159,7 +158,7 @@ UAWCPXAHMK%
 
 
 
-II| CLI : COMMAND LINE INTERFACE :
+2| CLI : COMMAND LINE INTERFACE :
 ----------------------------------
     Le mode CLI ou ligne de commande est la fonctionnalité additionnelle principale du
 projet. Elle permet d'exécuter le programme comme une commande linux, facilitant son
@@ -210,7 +209,7 @@ HELLOWORLDTHEANSWERISFOURTWO
 
 
 
-III| TESTS :
+3| TESTS :
 ------------
 Après le test 1.2, les tests concernant le chiffrement s'appliquent aussi au déchiffrement.
 
@@ -478,6 +477,4 @@ Tests 6 : Concerne l'affichage de l'aide et de la version.
 |===========|======================|==============|=================|==========|
 
 
-    Ces tests ont été lancés avec l'outil Valgrind afin de retirer toutes les fuites et
-erreurs de mémoire. Cet objectif est rempli. Autant qu'on a testé, aucune erreur n'est
-plus détectée.
+Ces tests ont été lancés avec l'outil Valgrind afin de retirer toutes les fuites et erreurs de mémoire. Cet objectif est rempli. Autant qu'on a testé, aucune erreur n'est plus détectée.
